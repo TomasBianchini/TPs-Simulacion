@@ -1,4 +1,7 @@
 import random 
+import matplotlib
+prom = 18
+n = 1000 #TODO pasarlo a argumentos de entrada  
 corridas = []
 for j in range (0,100):
     frecuencia_absoluta = {}
@@ -13,3 +16,4 @@ for j in range (0,100):
         # print("Frecuencia relativa de ", i, ":", frecuencia_relativa[i])
     corridas.append(frecuencia_absoluta)
 print(corridas)
+
