@@ -132,14 +132,14 @@ def MET_LABOUCHERE(n, apuestaInicial, capital=float('inf')):
     apuestas_iniciales = apuestaInicial.copy()  # Mantener una copia de la lista de apuestas iniciales
     
     while i <= n:
-        if not apuestas:  # Si la lista de apuestas está vacía, restaurarla a su estado original
-            apuestas = apuestas_iniciales.copy()
         
         apostado = 'p' # Apostar a la paridad par
         paridad = 'i'  # Empezar asumiendo una paridad diferente a la apostada
         tirada = 1
         
+        
         while paridad != apostado and i <= n:
+            apuesta = apuestas[0] if len(apuestas) == 1 else apuestas[0] + apuestas[-1] 
             i += 1  # Acumular un giro de ruleta
             valorGanador = tirarRuleta()  # Supongamos que hay una función tirarRuleta() que devuelve el valor ganador
             if valorGanador == 0:
@@ -151,25 +151,23 @@ def MET_LABOUCHERE(n, apuestaInicial, capital=float('inf')):
             
             # Evaluar si se ganó o se perdió
             if paridad != apostado:  # Pérdida
-                flujoCaja.append(flujoCaja[-1] - (apuestas[0] + apuestas[-1]))
+                flujoCaja.append(flujoCaja[-1] - apuesta)
                 if len(apuestas) > 1:
-                    apuestas.append(apuestas[0] + apuestas[-1])  # Agregar la suma de la primera y última apuesta a la lista
+                    apuestas.append(apuesta)  # Agregar la suma de la primera y última apuesta a la lista
                 tirada += 1
             else:  # Ganancia
                 tiradaGanadora.append(tirada)  # Guardar tirada ganadora
-                flujoCaja.append(flujoCaja[-1] + (apuestas[0] + apuestas[-1]))
+                flujoCaja.append(flujoCaja[-1] + apuesta)
                 if len(apuestas) > 1:
                     apuestas.pop(0)  # Eliminar la primera apuesta
                     apuestas.pop(-1)  # Eliminar la última apuesta
-          
-            if apuestas and ((apuestas[0] + apuestas[-1]) >= capital) or capital + flujoCaja[-1] < 0 or -flujoCaja[-1]+(apuestas[0] + apuestas[-1]) > capital:
-                print((apuestas[0] + apuestas[-1]) >= capital, capital + flujoCaja[-1] < 0)
-                print(apuestas[0], apuestas[-1], capital, flujoCaja[-1])
-                print(apuestas[0] + apuestas[-1], capital + flujoCaja[-1])
-                print('Capital:', capital, 'Flujo de caja:', flujoCaja[-1], 'Apuesta:', (apuestas[0] + apuestas[-1]),'apuestas',apuestas)
+            if not apuestas:  # Si la lista de apuestas está vacía, restaurarla a su estado original
+                apuestas = apuestas_iniciales.copy()
+            if (apuestas[0] + apuestas[-1] > capital) or capital + flujoCaja[-1] < 0 or -flujoCaja[-1]+(apuestas[0] + apuestas[-1]) > capital:
+                print('Capital:', capital, 'Flujo de caja:', flujoCaja[-1], 'Apuesta futura:', (apuestas[0] + apuestas[-1]),'apuestas',apuestas)
                 break  # Salir del bucle si el capital se agota o se alcanza el límite
         
-        if apuestas and ((apuestas[0] + apuestas[-1]) >= capital) or capital + flujoCaja[-1] < 0 or -flujoCaja[-1]+(apuestas[0] + apuestas[-1]) > capital:
+        if(apuestas[0] + apuestas[-1] > capital) or capital + flujoCaja[-1] < 0 or -flujoCaja[-1]+(apuestas[0] + apuestas[-1]) > capital:
             print("Se alcanzó el límite de capital negativo. Salir del método.")
             break
     
@@ -179,4 +177,4 @@ def MET_LABOUCHERE(n, apuestaInicial, capital=float('inf')):
     GRAF_VARCAP(flujoCaja)
 #MET_MARTINGALA(100,5,5)
 #MET_DALEMBERT(100,5)
-MET_LABOUCHERE(100, [1, 2, 3, 4, 5],30)
+MET_LABOUCHERE(100, [1, 2, 3, 4, 5],10)
