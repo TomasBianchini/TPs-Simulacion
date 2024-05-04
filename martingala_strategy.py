@@ -1,5 +1,5 @@
 import random
-from graphics import cash_evolucion, GRAF_FREC_RELATIVA, GRAF_VARCAP
+from graphics import cash_evolution, GRAF_FREC_RELATIVA, GRAF_VARCAP
 ## Infinito
 #METODO MARTINGALA
 def martingala_strategy(n, apuestaInicial, capitalInicial):
@@ -77,6 +77,6 @@ def martingala_strategy(n, apuestaInicial, capitalInicial):
         
 #         cash_evolution_players.append(cash_evolution)
 
-#     cash_evolucion(cash_evolution_players)
+#     cash_evolution(cash_evolution_players)
 
 # martingale_strategy(number_of_players, initial_bet, initial_capital, n)

@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 
 colores = ['r', 'g', 'c', 'm', 'y', 'k', 'orange', 'purple', 'brown']
 
-def cash_evolucion(data):
+def cash_evolution(data):
     plt.figure(figsize=(10, 6))
     for i, player_data in enumerate(data):
         plt.plot(player_data)
