@@ -51,32 +51,32 @@ def martingala_strategy(n, apuestaInicial, capitalInicial):
 
 
 ## Finito marcos
-def martingale_strategy_finito(number_of_players, initial_bet, initial_capital, rounds):
-    cash_evolution_players = []
-    for j in range(0, number_of_players):
-        cash_in_hand = initial_capital
-        bet = initial_bet
-        cash_evolution = [cash_in_hand]
+# def martingala_strategy_finito(number_of_players, initial_bet, initial_capital, rounds):
+#     cash_evolution_players = []
+#     for j in range(0, number_of_players):
+#         cash_in_hand = initial_capital
+#         bet = initial_bet
+#         cash_evolution = [cash_in_hand]
 
-        for i in range(0, rounds):
+#         for i in range(0, rounds):
 
-            result = random.randint(0, 37)
+#             result = random.randint(0, 37)
             
-            if cash_in_hand>0:
+#             if cash_in_hand>0:
 
-                if (result % 2 == 0) & (result!=0):
-                    cash_in_hand = cash_in_hand + bet
-                    bet = initial_bet
-                else:
-                    cash_in_hand = cash_in_hand - bet
-                    bet = 2*bet
-                    if bet>cash_in_hand:
-                        bet = cash_in_hand
+#                 if (result % 2 == 0) & (result!=0):
+#                     cash_in_hand = cash_in_hand + bet
+#                     bet = initial_bet
+#                 else:
+#                     cash_in_hand = cash_in_hand - bet
+#                     bet = 2*bet
+#                     if bet>cash_in_hand:
+#                         bet = cash_in_hand
 
-            cash_evolution.append(cash_in_hand)
+#             cash_evolution.append(cash_in_hand)
         
-        cash_evolution_players.append(cash_evolution)
+#         cash_evolution_players.append(cash_evolution)
 
-    cash_evolucion(cash_evolution_players)
+#     cash_evolucion(cash_evolution_players)
 
-martingale_strategy(number_of_players, initial_bet, initial_capital, n)
+# martingale_strategy(number_of_players, initial_bet, initial_capital, n)
