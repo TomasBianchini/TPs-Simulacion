@@ -1,29 +1,31 @@
 import random
-from graphics import GRAF_FREC_RELATIVA, GRAF_VARCAP
+from graphics import relative_frequency, cash_evolution
 #Metodo D'Alembert
-def dalembert_strategy(number_of_players, initial_bet, n, initial_capital):
+def dalembert_strategy(number_of_players, initial_bet, n, initial_capital= float('inf')):
     i=1
-    Winning_AttemptAcc = []
-    Cash_EvolutionPlayers = []
+    x=1
+    winning_attemptAcc = []
+    cash_evolutionPlayers = []
     bet = initial_bet
-    if initial_capital == 'i':
+    if initial_capital == float('inf'):
         print('Metodo DAlembert: capital Infinito')
     else:
         print('Metodo DAlembert: capital Finito')
         print(initial_capital)
-    for i in range(1, number_of_players + 1):
-        Winning_Attempt = []
-        Cash_Evolution = []
-        if initial_capital == 'i':
-            Cash_Evolution.append(0)
+    for x in range(1, number_of_players + 1):
+        i=1
+        winning_attempt = []
+        cash_flow = []
+        if initial_capital == float('inf'):
+            cash_flow.append(0)
         else:
-            Cash_Evolution.append(initial_capital)
+            cash_flow.append(initial_capital)
 
-        while i<=n and (Cash_Evolution[-1] >= 0 or initial_capital == 'i'):
+        while i<=n and (cash_flow[-1] >= 0 or initial_capital == float('inf')):
             wagered = 'p' #PAR
             parity = 'i'
-            Attempt = 1
-            while parity != wagered and i<=n and (Cash_Evolution[-1] >= 0 or initial_capital == 'i'):
+            attempt = 1
+            while parity != wagered and i<=n and (cash_flow[-1] >= 0 or initial_capital == float('inf')):
                 i += 1 #Acumulo un giro de ruleta
                 result = random.randint(0, 36) 
                 if result == 0 :
@@ -33,17 +35,17 @@ def dalembert_strategy(number_of_players, initial_bet, n, initial_capital):
                 else: parity = 'i'
                 #evaluo si gano
                 if parity != wagered : #Perdida
-                    Cash_Evolution.append(Cash_Evolution[-1] - bet) 
+                    cash_flow.append(cash_flow[-1] - bet) 
                     bet += 1
-                    Attempt += 1
+                    attempt += 1
                 else: 
-                    Winning_Attempt.append(Attempt)  #Guardamos Attempt ganadora
-                    Cash_Evolution.append(Cash_Evolution[-1] + bet) 
+                    winning_attempt.append(attempt)  #Guardamos attempt ganadora
+                    cash_flow.append(cash_flow[-1] + bet) 
                     if bet > 1:
                         bet -= 1
-        print('Flujo de caja:', Cash_Evolution )
-        print('Tirada ganadora:', Winning_Attempt)
-        Winning_AttemptAcc.append(Winning_Attempt)
-        Cash_EvolutionPlayers.append(Cash_Evolution)
-    GRAF_FREC_RELATIVA(Winning_AttemptAcc)
-    GRAF_VARCAP(Cash_EvolutionPlayers, initial_capital)
+        print('Flujo de caja:', cash_flow )
+        print('Tirada ganadora:', winning_attempt)
+        winning_attemptAcc.append(winning_attempt)
+        cash_evolutionPlayers.append(cash_flow)
+    relative_frequency(winning_attemptAcc)
+    cash_evolution(cash_evolutionPlayers,initial_capital)
