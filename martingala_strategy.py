@@ -45,11 +45,13 @@ def martingala_strategy(number_of_players, initial_bet,n, initial_capital=float(
         cash_evolution_pl_players.append(cash_evolution_pl)
         Winning_AttemptAcc.append(winning_attempt)
         all_bets.append(bets)
-        print('Flujo de caja:', cash_evolution_pl)
-        print('win_at ganadora:', winning_attempt)
+
     
-    print(cash_evolution_pl_players)
-    relative_frequency(Winning_AttemptAcc)
+    # print(Winning_AttemptAcc[0])
+    # print(all_bets[0])
+    # print(cash_evolution_pl_players[0])
+    GRAF_FREC_RELATIVA(Winning_AttemptAcc)
     cash_evolution(cash_evolution_pl_players)
 
+# martingala_strategy(3, 1, 100)
 # martingala_strategy(3, 1, 100)
