@@ -46,8 +46,6 @@ def fibonacci_strategy(number_of_players, initial_bet, n ,initial_capital = floa
         cash_evolution_players.append(cash_evolution)
         print(cash_evolution)   
         winning_attempts.append(winning_attempt)
-    # relative_frequency(winning_attempts)
+    relative_frequency(winning_attempts)
     evolution(cash_evolution_players)
 
-
-# fibonacci_strategy(1,1,100,10)

@@ -1,7 +1,5 @@
 import sys
 from fibonacci_strategy import fibonacci_strategy
-from martingala_strategy_viejo import martingala_strategy 
-from dalembert_strategy_viejo import dalembert_strategy
 from martingala_strategy import martingala_strategy 
 from dalembert_strategy import dalembert_strategy
 from labouchere_strategy import labouchere_strategy

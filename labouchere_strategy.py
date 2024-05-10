@@ -60,5 +60,3 @@ def labouchere_strategy(number_of_players, initial_bet,n, initial_capital=float(
     print(cash_evolution_pl_players)
     relative_frequency(Winning_AttemptAcc)
     cash_evolution(cash_evolution_pl_players)
-
-# labouchere_strategy(3, [1, 2, 3, 4], 100,20)

@@ -54,4 +54,3 @@ def martingala_strategy(number_of_players, initial_bet,n, initial_capital=float(
     cash_evolution(cash_evolution_pl_players)
 
 # martingala_strategy(3, 1, 100)
-# martingala_strategy(3, 1, 100)
