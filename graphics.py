@@ -6,6 +6,7 @@ def cash_evolution(data):
     plt.figure(figsize=(10, 6))
     for i, player_data in enumerate(data):
         plt.plot(player_data)
+    plt.axhline(y=data[0], color='r', linestyle='--')
     plt.xlabel('tirada n')
     plt.ylabel('capital en mano')
     plt.grid(True)

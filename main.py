@@ -20,18 +20,18 @@ if strategy == 'f':
         fibonacci_strategy(number_of_players, initial_bet, n, capital)
     else:
         fibonacci_strategy(number_of_players, initial_bet, n) 
-# elif strategy == 'm':
-#     if capital != 0:
-#         # martingala_strategy(number_of_players, initial_bet, n, capital)
-#     else:
-#         martingala_strategy(number_of_players, initial_bet, n)
-# elif strategy == 'd':
-#     if capital != 0:
-#         dalembert_strategy(number_of_players, initial_bet, n, capital)
-#     else:
-#         dalembert_strategy(number_of_players, initial_bet, n)
-# elif strategy == 'l':
-#     if capital != 0:
-#         labouchere_strategy(number_of_players, initial_bet, n, capital)
-#     else:
-#         labouchere_strategy(number_of_players, initial_bet, n)
+elif strategy == 'm':
+    if capital != 0:
+        martingala_strategy(number_of_players, initial_bet, n, capital)
+    else:
+        martingala_strategy(number_of_players, initial_bet, n)
+elif strategy == 'd':
+    if capital != 0:
+        dalembert_strategy(number_of_players, initial_bet, n, capital)
+    else:
+        dalembert_strategy(number_of_players, initial_bet, n)
+elif strategy == 'l':
+    if capital != 0:
+        labouchere_strategy(number_of_players, initial_bet, n, capital)
+    else:
+        labouchere_strategy(number_of_players, initial_bet, n)
