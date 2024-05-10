@@ -1,5 +1,5 @@
 import random
-from graphics import cash_evolution, GRAF_FREC_RELATIVA, GRAF_VARCAP
+from graphics import cash_evolution, relative_frequency, GRAF_VARCAP
 ## Infinito
 #METODO MARTINGALA
 def martingala_strategy(n, apuestaInicial, capitalInicial):
@@ -46,7 +46,7 @@ def martingala_strategy(n, apuestaInicial, capitalInicial):
     #print('Flujo Apuestas: ', flujoApuestas)
     print('Flujo de caja:', flujoCaja )
     print('Tirada ganadora:', tiradaGanadora)
-    GRAF_FREC_RELATIVA(tiradaGanadora)
+    relative_frequency(tiradaGanadora)
     GRAF_VARCAP(flujoCaja)
 
 
@@ -79,4 +79,4 @@ def martingala_strategy_finito(number_of_players, initial_bet, initial_capital, 
 
     cash_evolution(cash_evolution_players)
 
-martingala_strategy(number_of_players, initial_bet, initial_capital, n)
+# martingala_strategy(number_of_players, initial_bet, initial_capital, n)

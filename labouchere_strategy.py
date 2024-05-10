@@ -1,5 +1,5 @@
 import random
-from graphics import cash_evolution, GRAF_FREC_RELATIVA, GRAF_VARCAP
+from graphics import cash_evolution, relative_frequency
 def labouchere_strategy(number_of_players, initial_bet,n, initial_capital=float('inf')):
     print('Metodo Labouchere')
     Winning_AttemptAcc = []
@@ -13,7 +13,6 @@ def labouchere_strategy(number_of_players, initial_bet,n, initial_capital=float(
         win_at = 1
         bet=bets[0] + bets[-1] 
         for i in range(0, n):
-            
             apostado = 'p' # Apostar a la paridad par
             result = random.randint(0, 37)
                 # Supongamos que hay una función tirarRuleta() que devuelve el valor ganador
@@ -23,7 +22,6 @@ def labouchere_strategy(number_of_players, initial_bet,n, initial_capital=float(
                 paridad = 'p'  # Si el valor ganador es par, la paridad es 'p'
             else:
                 paridad = 'i'  # Si el valor ganador es impar, la paridad es 'i'
-            
             # Evaluar si se ganó o se perdió
             if cash_evolution_pl[-1] != 0 or initial_capital == float('inf'):
                 if paridad != apostado:  # Pérdida
@@ -53,7 +51,7 @@ def labouchere_strategy(number_of_players, initial_bet,n, initial_capital=float(
         print('win_at ganadora:', winning_attempt)
     
     print(cash_evolution_pl_players)
-    GRAF_FREC_RELATIVA(Winning_AttemptAcc)
+    relative_frequency(Winning_AttemptAcc)
     cash_evolution(cash_evolution_pl_players)
 
-labouchere_strategy(3, [1, 2, 3, 4], 100,20)
+# labouchere_strategy(3, [1, 2, 3, 4], 100,20)

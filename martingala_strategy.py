@@ -1,5 +1,5 @@
 import random
-from graphics import cash_evolution, GRAF_FREC_RELATIVA, GRAF_VARCAP
+from graphics import cash_evolution, relative_frequency
 def martingala_strategy(number_of_players, initial_bet,n, initial_capital=float('inf')):
     print('Metodo Martingala')
     Winning_AttemptAcc = []
@@ -49,7 +49,7 @@ def martingala_strategy(number_of_players, initial_bet,n, initial_capital=float(
         print('win_at ganadora:', winning_attempt)
     
     print(cash_evolution_pl_players)
-    GRAF_FREC_RELATIVA(Winning_AttemptAcc)
+    relative_frequency(Winning_AttemptAcc)
     cash_evolution(cash_evolution_pl_players)
 
-martingala_strategy(3, 1, 100)
+# martingala_strategy(3, 1, 100)
