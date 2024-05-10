@@ -39,7 +39,7 @@ def fibonacci_strategy(number_of_players, initial_bet, n ,initial_capital = floa
                         break
                     else: 
                         #Si gana arranca la secuencia de nuevo
-                        winning_attempt.append(tirada)  
+                        winning_attempt.append(attempt)  
                         cash_evolution.append(cash_evolution[-1] + 2*bet)
                         break
                 else:
@@ -54,7 +54,7 @@ def fibonacci_strategy(number_of_players, initial_bet, n ,initial_capital = floa
                             bet = bet_evolution[-2] + bet_evolution[-1]
                         attempt += 1
                     else: 
-                        winning_attempt.append(tirada)  
+                        winning_attempt.append(attempt)  
                         cash_evolution.append(cash_evolution[-1] + 2*bet)
         cash_evolution_players.append(cash_evolution)
     evolution(cash_evolution_players)
