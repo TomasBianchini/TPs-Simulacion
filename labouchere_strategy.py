@@ -1,55 +1,59 @@
 import random
-from graphics import GRAF_FREC_RELATIVA, GRAF_VARCAP
-def labouchere_strategy(n, apuestaInicial, capital=float('inf')):
+from graphics import cash_evolution, GRAF_FREC_RELATIVA, GRAF_VARCAP
+def labouchere_strategy(number_of_players, initial_bet,n, initial_capital=float('inf')):
     print('Metodo Labouchere')
-    i = 1
-    tiradaGanadora = []
-    flujoCaja = []
-    apuestas = apuestaInicial.copy()  # Copiar la lista de apuestas iniciales
-    flujoCaja.append(0)
-    apuestas_iniciales = apuestaInicial.copy()  # Mantener una copia de la lista de apuestas iniciales
-    
-    while i <= n:
-        
-        apostado = 'p' # Apostar a la paridad par
-        paridad = 'i'  # Empezar asumiendo una paridad diferente a la apostada
-        tirada = 1
-        
-        
-        while paridad != apostado and i <= n:
-            apuesta = apuestas[0] if len(apuestas) == 1 else apuestas[0] + apuestas[-1] 
-            i += 1  # Acumular un giro de ruleta
-            valorGanador = random.randint(0, 36)   # Supongamos que hay una función tirarRuleta() que devuelve el valor ganador
-            if valorGanador == 0:
+    Winning_AttemptAcc = []
+    cash_evolution_pl_players = []
+    for p in range(0,number_of_players):
+        cash_in_hand = initial_capital if initial_capital != float('inf') else 0
+        winning_attempt = []
+        cash_evolution_pl = []
+        bets = initial_bet.copy()  # Copiar la lista de bets iniciales
+        cash_evolution_pl.append(cash_in_hand)
+        win_at = 1
+        bet=bets[0] + bets[-1] 
+        for i in range(0, n):
+            
+            apostado = 'p' # Apostar a la paridad par
+            result = random.randint(0, 37)
+                # Supongamos que hay una función tirarRuleta() que devuelve el valor ganador
+            if result == 0:
                 paridad = 'n'  # Si el valor ganador es 0, se considera como "nulo"
-            elif valorGanador % 2 == 0:
+            elif result % 2 == 0:
                 paridad = 'p'  # Si el valor ganador es par, la paridad es 'p'
             else:
                 paridad = 'i'  # Si el valor ganador es impar, la paridad es 'i'
             
             # Evaluar si se ganó o se perdió
-            if paridad != apostado:  # Pérdida
-                flujoCaja.append(flujoCaja[-1] - apuesta)
-                if len(apuestas) > 1:
-                    apuestas.append(apuesta)  # Agregar la suma de la primera y última apuesta a la lista
-                tirada += 1
-            else:  # Ganancia
-                tiradaGanadora.append(tirada)  # Guardar tirada ganadora
-                flujoCaja.append(flujoCaja[-1] + apuesta)
-                if len(apuestas) > 1:
-                    apuestas.pop(0)  # Eliminar la primera apuesta
-                    apuestas.pop(-1)  # Eliminar la última apuesta
-            if not apuestas:  # Si la lista de apuestas está vacía, restaurarla a su estado original
-                apuestas = apuestas_iniciales.copy()
-            if (apuestas[0] + apuestas[-1] > capital) or capital + flujoCaja[-1] < 0 or -flujoCaja[-1]+(apuestas[0] + apuestas[-1]) > capital:
-                print('Capital:', capital, 'Flujo de caja:', flujoCaja[-1], 'Apuesta futura:', (apuestas[0] + apuestas[-1]),'apuestas',apuestas)
-                break  # Salir del bucle si el capital se agota o se alcanza el límite
+            if cash_evolution_pl[-1] != 0 or initial_capital == float('inf'):
+                if paridad != apostado:  # Pérdida
+                    cash_in_hand=cash_in_hand-bet 
+                    bets.append(bet)  # Agregar la suma de la primera y última bet a la lista
+                    win_at += 1
+                else:  # Ganancia
+                    winning_attempt.append(win_at)  # Guardar win_at ganadora
+                    cash_in_hand=cash_in_hand+bet
+                    win_at = 1
+                    if len(bets) > 1:
+                        bets.pop(0)  # Eliminar la primera bet
+                        bets.pop(-1)  # Eliminar la última bet
+                    else:
+                        bets.pop(0)  # Eliminar la única bet
+            cash_evolution_pl.append(cash_in_hand)
+            if not bets:  # Si la lista de bets está vacía, restaurarla a su estado original
+                bets = initial_bet.copy() 
+            bet = bets[0] if len(bets) == 1 else bets[0] + bets[-1] # Calcular la próxima bet
+            #si no ta alcanza para la proxima apuesta, apuesto lo que me queda
+            if bet>cash_in_hand and initial_capital != float('inf'):
+                bet = cash_in_hand
         
-        if(apuestas[0] + apuestas[-1] > capital) or capital + flujoCaja[-1] < 0 or -flujoCaja[-1]+(apuestas[0] + apuestas[-1]) > capital:
-            print("Se alcanzó el límite de capital negativo. Salir del método.")
-            break
+        cash_evolution_pl_players.append(cash_evolution_pl)
+        Winning_AttemptAcc.append(winning_attempt)
+        print('Flujo de caja:', cash_evolution_pl)
+        print('win_at ganadora:', winning_attempt)
     
-    print('Flujo de caja:', flujoCaja)
-    print('Tirada ganadora:', tiradaGanadora)
-    GRAF_FREC_RELATIVA(tiradaGanadora)
-    GRAF_VARCAP(flujoCaja)
+    print(cash_evolution_pl_players)
+    GRAF_FREC_RELATIVA(Winning_AttemptAcc)
+    cash_evolution(cash_evolution_pl_players)
+
+labouchere_strategy(3, [1, 2, 3, 4], 100,20)
