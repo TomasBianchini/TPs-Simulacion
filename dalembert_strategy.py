@@ -48,4 +48,4 @@ def dalembert_strategy(number_of_players, initial_bet, n, initial_capital= float
         winning_attemptAcc.append(winning_attempt)
         cash_evolutionPlayers.append(cash_flow)
     relative_frequency(winning_attemptAcc)
-    cash_evolution(cash_evolutionPlayers,initial_capital)
+    cash_evolution(cash_evolutionPlayers)
