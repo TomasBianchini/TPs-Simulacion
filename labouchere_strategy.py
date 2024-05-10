@@ -4,6 +4,7 @@ def labouchere_strategy(number_of_players, initial_bet,n, initial_capital=float(
     print('Metodo Labouchere')
     Winning_AttemptAcc = []
     cash_evolution_pl_players = []
+    all_bets=[]
     for p in range(0,number_of_players):
         cash_in_hand = initial_capital if initial_capital != float('inf') else 0
         winning_attempt = []
@@ -12,6 +13,7 @@ def labouchere_strategy(number_of_players, initial_bet,n, initial_capital=float(
         cash_evolution_pl.append(cash_in_hand)
         win_at = 1
         bet=bets[0] + bets[-1] 
+        bets_history=[bet]
         for i in range(0, n):
             
             apostado = 'p' # Apostar a la paridad par
@@ -40,6 +42,7 @@ def labouchere_strategy(number_of_players, initial_bet,n, initial_capital=float(
                     else:
                         bets.pop(0)  # Eliminar la única bet
             cash_evolution_pl.append(cash_in_hand)
+            bets_history.append(bet)
             if not bets:  # Si la lista de bets está vacía, restaurarla a su estado original
                 bets = initial_bet.copy() 
             bet = bets[0] if len(bets) == 1 else bets[0] + bets[-1] # Calcular la próxima bet
@@ -49,10 +52,12 @@ def labouchere_strategy(number_of_players, initial_bet,n, initial_capital=float(
         
         cash_evolution_pl_players.append(cash_evolution_pl)
         Winning_AttemptAcc.append(winning_attempt)
-        print('Flujo de caja:', cash_evolution_pl)
-        print('win_at ganadora:', winning_attempt)
+        all_bets.append(bets_history)
+
     
-    print(cash_evolution_pl_players)
+    # print(Winning_AttemptAcc[0])
+    # print(all_bets[0])
+    # print(cash_evolution_pl_players[0])
     GRAF_FREC_RELATIVA(Winning_AttemptAcc)
     cash_evolution(cash_evolution_pl_players)
 

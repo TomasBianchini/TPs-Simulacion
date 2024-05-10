@@ -1,51 +1,56 @@
 import random
-from graphics import relative_frequency, cash_evolution
-#Metodo D'Alembert
-def dalembert_strategy(number_of_players, initial_bet, n, initial_capital= float('inf')):
-    i=1
-    x=1
-    winning_attemptAcc = []
-    cash_evolutionPlayers = []
-    bet = initial_bet
-    if initial_capital == float('inf'):
-        print('Metodo DAlembert: capital Infinito')
-    else:
-        print('Metodo DAlembert: capital Finito')
-        print(initial_capital)
-    for x in range(1, number_of_players + 1):
-        i=1
+from graphics import cash_evolution, GRAF_FREC_RELATIVA
+def dalembert_strategy(number_of_players, initial_bet,n, initial_capital=float('inf')):
+    print('Metodo DAlembert')
+    Winning_AttemptAcc = []
+    cash_evolution_pl_players = []
+    all_bets=[]
+    for p in range(0,number_of_players):
+        cash_in_hand = initial_capital if initial_capital != float('inf') else 0
         winning_attempt = []
-        cash_flow = []
-        if initial_capital == float('inf'):
-            cash_flow.append(0)
-        else:
-            cash_flow.append(initial_capital)
-
-        while i<=n and (cash_flow[-1] >= 0 or initial_capital == float('inf')):
-            wagered = 'p' #PAR
-            parity = 'i'
-            attempt = 1
-            while parity != wagered and i<=n and (cash_flow[-1] >= 0 or initial_capital == float('inf')):
-                i += 1 #Acumulo un giro de ruleta
-                result = random.randint(0, 36) 
-                if result == 0 :
-                    parity = 'n'
-                elif result % 2 == 0 :
-                    parity = 'p'
-                else: parity = 'i'
-                #evaluo si gano
-                if parity != wagered : #Perdida
-                    cash_flow.append(cash_flow[-1] - bet) 
+        cash_evolution_pl = []
+        cash_evolution_pl.append(cash_in_hand)
+        win_at = 1
+        bet=initial_bet 
+        bets=[bet]
+        for i in range(0, n):
+            
+            apostado = 'p' # Apostar a la paridad par
+            result = random.randint(0, 37)
+                # Supongamos que hay una función tirarRuleta() que devuelve el valor ganador
+            if result == 0:
+                paridad = 'n'  # Si el valor ganador es 0, se considera como "nulo"
+            elif result % 2 == 0:
+                paridad = 'p'  # Si el valor ganador es par, la paridad es 'p'
+            else:
+                paridad = 'i'  # Si el valor ganador es impar, la paridad es 'i'
+            
+            # Evaluar si se ganó o se perdió
+            if cash_evolution_pl[-1] != 0 or initial_capital == float('inf'):
+                if paridad != apostado:  # Pérdida
+                    cash_in_hand=cash_in_hand-bet 
                     bet += 1
-                    attempt += 1
-                else: 
-                    winning_attempt.append(attempt)  #Guardamos attempt ganadora
-                    cash_flow.append(cash_flow[-1] + bet) 
+                    win_at += 1
+                else:  # Ganancia
+                    winning_attempt.append(win_at)  # Guardar win_at ganadora
+                    cash_in_hand=cash_in_hand+bet
+                    win_at = 1
                     if bet > 1:
-                        bet -= 1
-        print('Flujo de caja:', cash_flow )
-        print('Tirada ganadora:', winning_attempt)
-        winning_attemptAcc.append(winning_attempt)
-        cash_evolutionPlayers.append(cash_flow)
-    relative_frequency(winning_attemptAcc)
-    cash_evolution(cash_evolutionPlayers)
+                      bet -= 1
+            cash_evolution_pl.append(cash_in_hand)
+            bets.append(bet)
+            #si no ta alcanza para la proxima apuesta, apuesto lo que me queda
+            if bet>cash_in_hand and initial_capital != float('inf'):
+                bet = cash_in_hand
+        
+        cash_evolution_pl_players.append(cash_evolution_pl)
+        Winning_AttemptAcc.append(winning_attempt)
+        all_bets.append(bets)
+
+    # print(Winning_AttemptAcc[0])
+    # print(all_bets[0])
+    # print(cash_evolution_pl_players[0])
+    GRAF_FREC_RELATIVA(Winning_AttemptAcc)
+    cash_evolution(cash_evolution_pl_players)
+
+# dalembert_strategy(3, 1, 100,10)
