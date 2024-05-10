@@ -1,5 +1,5 @@
 import random
-from graphics import cash_evolution, GRAF_FREC_RELATIVA
+from graphics import cash_evolution, relative_frequency
 def dalembert_strategy(number_of_players, initial_bet,n, initial_capital=float('inf')):
     print('Metodo DAlembert')
     Winning_AttemptAcc = []
@@ -50,7 +50,7 @@ def dalembert_strategy(number_of_players, initial_bet,n, initial_capital=float('
     # print(Winning_AttemptAcc[0])
     # print(all_bets[0])
     # print(cash_evolution_pl_players[0])
-    GRAF_FREC_RELATIVA(Winning_AttemptAcc)
+    relative_frequency(Winning_AttemptAcc)
     cash_evolution(cash_evolution_pl_players)
 
 # dalembert_strategy(3, 1, 100,10)
