@@ -56,7 +56,9 @@ def labouchere_strategy(number_of_players, initial_bet,n, initial_capital=float(
     # print(Winning_AttemptAcc[0])
     # print(all_bets[0])
     # print(cash_evolution_pl_players[0])
-    GRAF_FREC_RELATIVA(Winning_AttemptAcc)
+    
     print(cash_evolution_pl_players)
     relative_frequency(Winning_AttemptAcc)
     cash_evolution(cash_evolution_pl_players)
+
+#labouchere_strategy(100, [1, 1, 1, 1], 10000)
