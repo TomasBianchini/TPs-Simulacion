@@ -18,3 +18,10 @@ def RunsTest(numbers: list, alpha: float = .05) -> str:
     var_c = (nn2*(nn2-n))/((n**2)*(n-1))
     z = (c-mean_c)/sqrt(var_c)
     return abs(z) < norm.ppf(1-alpha/2)
+
+def monobit_test(numbers: list, alpha: float = 0.05) -> bool:
+    n = len(numbers)
+    s = sum(1 if num >= 0.5 else 0 for num in numbers)  # Suma de los números (1 si es >= 0.5, 0 si es < 0.5)
+    s_obs = abs(s - n/2) / (n**0.5)  # Cálculo de la estadística observada
+    p_value = norm.sf(s_obs)  # Valor p usando la función de supervivencia de la distribución normal
+    return p_value > alpha
