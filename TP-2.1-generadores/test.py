@@ -19,9 +19,26 @@ def RunsTest(numbers: list, alpha: float = .05) -> str:
     z = (c-mean_c)/sqrt(var_c)
     return abs(z) < norm.ppf(1-alpha/2)
 
-def monobit_test(numbers: list, alpha: float = 0.05) -> bool:
-    n = len(numbers)
-    s = sum(1 if num >= 0.5 else 0 for num in numbers)  # Suma de los números (1 si es >= 0.5, 0 si es < 0.5)
-    s_obs = abs(s - n/2) / (n**0.5)  # Cálculo de la estadística observada
-    p_value = norm.sf(s_obs)  # Valor p usando la función de supervivencia de la distribución normal
-    return p_value > alpha
+
+
+
+
+
+#Los generadores devuelven numeros pero se necesita trabajar con bits para el test de monobit
+def number_to_bits(number):
+    binary_representation = bin(number)[2:]
+    padded_binary = binary_representation.zfill(8)
+    bits_list = [int(bit) for bit in padded_binary]
+    return bits_list
+#FREQUENCY MONOBIT TEST
+def monobit_test(sequence):
+    bits_sequence = [number_to_bits(num) for num in sequence]
+    flat_bits_sequence = [bit for sublist in bits_sequence for bit in sublist]
+    ones_count = sum(1 for bit in flat_bits_sequence if bit == 1)
+    zeros_count = len(flat_bits_sequence) - ones_count
+    proportion_ones = ones_count / len(flat_bits_sequence)
+    print('Proporción de unos:', proportion_ones)
+    if proportion_ones >= 0.45 and proportion_ones <= 0.55:
+        return "Pasa el Test de Frecuencia Monobit: Proporción de unos cercana a 0.5"
+    else:
+        return "No pasa el Test de Frecuencia Monobit: Proporción de unos no cercana a 0.5"
