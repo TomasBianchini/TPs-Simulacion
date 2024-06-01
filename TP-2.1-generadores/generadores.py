@@ -1,4 +1,4 @@
-from test import RunsTest, monobit_test
+from test import runsTest, monobit_test
 import random 
 def generatorLGC(seed, mult, mod,inc, m) -> list:
     # Linear congruential generator
@@ -9,7 +9,7 @@ def generatorLGC(seed, mult, mod,inc, m) -> list:
     return numbers
 h = generatorLGC(1, 1664525, 2**32 , 1013904223,10)
 print(h)
-h2 = RunsTest(h)
+h2 = runsTest(h)
 print('Runs Test Linear Congrutial Generator=',h2)
 h3 = monobit_test(h)
 print('Monibit Test Linear Congrutial Generator=',h3)
@@ -31,7 +31,7 @@ def AlgorithmMiddleSquare(seed: int, n: int) -> list:
 
 h = AlgorithmMiddleSquare(8217, 100)
 print(h)
-h2 = RunsTest(h)
+h2 = runsTest(h)
 print('Runs Test Middle Square=',h2)
 h3 = monobit_test(h)
 print('Monibit Test Middle Square=',h3)
