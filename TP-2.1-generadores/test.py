@@ -44,6 +44,19 @@ def monobit_test(sequence):
     else:
         return "No pasa el Test de Frecuencia Monobit: Proporción de unos no cercana a 0.5"
 
+# Test chi cuadrado
+def chi_test(numbers, k, alpha):
+    n = len(numbers)
+    bins = np.linspace(0, 1, k + 1)
+    hist, _ = np.histogram(numbers, bins)
+    expected = n / k
+    chi = sum([(observed - expected) ** 2 / expected for observed in hist])
+    result = chi<norm.ppf(1-alpha, k-1)
+    print("Resultado del test con una confianza del", (1 - alpha  ) * 100, "%:",
+          "Pasa el test ChiCuad" if result else "No pasa el test ChiCuad")
+    return result
+
+
 
 h = monobit_test( [100000,1116544556151561,156154,51,1,515])
 print(h)
