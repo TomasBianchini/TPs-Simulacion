@@ -26,13 +26,12 @@ def AlgorithmMiddleSquare(seed: int, n: int) -> list:
         str_X_n = str(X_n).zfill(2 * D)
         middle_digits = str_X_n[D//2 : D + D//2] 
         X_n = int(middle_digits)
-        r_i.append(X_n)
+        r_i.append(X_n / (10 ** D))
     return r_i
 
-h = AlgorithmMiddleSquare(8217, 100)
+h = AlgorithmMiddleSquare(5735, 100)
 print(h)
 h2 = RunsTest(h)
 print('Runs Test Middle Square=',h2)
 h3 = monobit_test(h)
 print('Monibit Test Middle Square=',h3)
-
