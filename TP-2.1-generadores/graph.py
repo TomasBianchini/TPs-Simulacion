@@ -38,7 +38,7 @@ def create_bitmap_image(numbers, width, height, output_filename):
     for y in range(height):
         for x in range(width):
             # Escalar el valor para que esté dentro del rango RGB (0-255)
-            color_value = int(numbers[index] / (2**32 - 1) * 255)
+            color_value = int(numbers[index] * 255)
             # Establecer el color del píxel
             pixels[x, y] = (color_value, color_value, color_value)
             index += 1

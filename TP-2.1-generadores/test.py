@@ -47,8 +47,8 @@ def monobit_test(sequence):
 # Test chi cuadrado
 def chi_test(numbers, k, alpha):
     n = len(numbers)
-    #bins = np.linspace(0, 1, k + 1)
-    bins= np.linspace(min(numbers), max(numbers), k + 1)
+    bins = np.linspace(0, 1, k + 1)
+    #bins= np.linspace(min(numbers), max(numbers), k + 1)
     hist, _ = np.histogram(numbers, bins)
     expected = n / k
     chi = sum([(observed - expected) ** 2 / expected for observed in hist])
