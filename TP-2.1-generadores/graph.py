@@ -17,9 +17,11 @@ def plot_scatter(list, color=(0, 0, 0), alpha=0.5, title='Scatter plot', xlabel=
     - ylabel: Etiqueta del eje y.
     """
     area = np.pi * 3
-    y= list 
-    #y = list[1:]+[list[0]] 
-    x = np.arange(1, len(y) + 1)
+    # y= list
+    # x = np.arange(1, len(y) + 1) 
+    x=list
+    y = list[1:]+[list[0]] 
+    
 
     # Creación del gráfico de dispersión
     plt.scatter(x, y, s=area, c=[color], alpha=alpha)

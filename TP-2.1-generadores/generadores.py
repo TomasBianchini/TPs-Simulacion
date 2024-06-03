@@ -1,23 +1,23 @@
-from test import runsTest, monobit_test, chi_test
+from test import medianTest, monobit_test, chi_test
 from graph import plot_scatter, create_bitmap_image
 import random 
-def generatorLGC(seed, mult, mod,inc, m) -> list:
+def generatorLGC(seed, a, m,c, n) -> list:
     # Linear congruential generator
     numbers = [] # No se si es necesario agregar la semilla a la lista
-    for i in range(m):
+    for i in range(n):
         if i==0:
-            next_number = ((mult*seed)+inc) % mod
+            next_number = ((a*seed)+c) % m
         else:
-            next_number = ((mult*numbers[i-1])+inc) % mod
+            next_number = ((a*numbers[i-1])+c) % m
         numbers.append(next_number)
-        probabilities = [number / (mod-1) for number in numbers]  # Excluimos la semilla de la lista final
+        probabilities = [number / (m-1) for number in numbers]  # Excluimos la semilla de la lista final
     return probabilities
 h = generatorLGC(1, 1664525, 2**32 , 1013904223,10)
 print(h)
-h2 = runsTest(h)
-print('Runs Test Linear Congrutial Generator=',h2)
-h3 = monobit_test(h)
-print('Monibit Test Linear Congrutial Generator=',h3)
+# h2 = medianTest(h)
+# print('Runs Test Linear Congrutial Generator=',h2)
+# h3 = monobit_test(h)
+#print('Monibit Test Linear Congrutial Generator=',h3)
 
 
 # Metodo de los cuadrados medios #
@@ -37,12 +37,12 @@ def AlgorithmMiddleSquare(seed: int, n: int) -> list:
 
 h = AlgorithmMiddleSquare(8217, 100)
 print(h)
-h2 = runsTest(h)
-print('Runs Test Middle Square=',h2)
-h3 = monobit_test(h)
-print('Monibit Test Middle Square=',h3)
-h4 = chi_test(h, 10, 0.05)
-print('Chi Test Middle Square=',h4)
+# h2 = medianTest(h)
+# print('Runs Test Middle Square=',h2)
+# h3 = monobit_test(h)
+# print('Monibit Test Middle Square=',h3)
+# h4 = chi_test(h, 10, 0.05)
+# print('Chi Test Middle Square=',h4)
 plot_scatter(h, color=(0, 0, 0), alpha=0.5, title='Scatter plot', xlabel='x', ylabel='y')
 
 # Generar números pseudoaleatorios usando tu generador LCG
