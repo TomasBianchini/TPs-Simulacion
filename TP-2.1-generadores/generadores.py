@@ -43,7 +43,10 @@ print(h)
 # print('Monibit Test Middle Square=',h3)
 # h4 = chi_test(h, 10, 0.05)
 # print('Chi Test Middle Square=',h4)
+h = generatorLGC(500, 106, 6075 , 1283,5000)
 plot_scatter(h, color=(0, 0, 0), alpha=0.5, title='Scatter plot', xlabel='x', ylabel='y')
+random_numbers = [random.random() for _ in range(5000)]
+plot_scatter(random_numbers, color=(0, 0, 0), alpha=0.5, title='Scatter plot', xlabel='x', ylabel='y')
 
 # Generar números pseudoaleatorios usando tu generador LCG
 lcg_numbers = generatorLGC(1, 1664525, 2**32, 1013904223, 512 * 512)
