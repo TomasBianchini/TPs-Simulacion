@@ -3,11 +3,15 @@ from graph import plot_scatter, create_bitmap_image
 import random 
 def generatorLGC(seed, mult, mod,inc, m) -> list:
     # Linear congruential generator
-    numbers = [seed] # No se si es necesario agregar la semilla a la lista
+    numbers = [] # No se si es necesario agregar la semilla a la lista
     for i in range(m):
-        next_number = ((mult*numbers[i])+inc) % mod
+        if i==0:
+            next_number = ((mult*seed)+inc) % mod
+        else:
+            next_number = ((mult*numbers[i-1])+inc) % mod
         numbers.append(next_number)
-    return numbers
+        probabilities = [number / (mod-1) for number in numbers]  # Excluimos la semilla de la lista final
+    return probabilities
 h = generatorLGC(1, 1664525, 2**32 , 1013904223,10)
 print(h)
 h2 = runsTest(h)

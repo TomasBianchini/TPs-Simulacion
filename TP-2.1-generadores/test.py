@@ -59,5 +59,5 @@ def chi_test(numbers, k, alpha):
 
 
 
-h = monobit_test( [100000,1116544556151561,156154,51,1,515])
-print(h)
+# h = monobit_test( [100000,1116544556151561,156154,51,1,515])
+# print(h)
