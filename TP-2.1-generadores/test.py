@@ -1,7 +1,7 @@
 import numpy as np
 from math import sqrt
 from scipy.stats import norm
-def runsTest(numbers: list, alpha: float = .05) -> str:
+def medianTest(numbers: list, alpha: float = .05) -> str:
     mean_est = np.mean(numbers)
     sec = [1 if r > mean_est else 0 for r in numbers] # 1 si es mayor a la media, 0 si es menor
     c = 0
@@ -59,5 +59,5 @@ def chi_test(numbers, k, alpha):
 
 
 
-h = monobit_test( [100000,1116544556151561,156154,51,1,515])
-print(h)
+# h = monobit_test( [100000,1116544556151561,156154,51,1,515])
+# print(h)
