@@ -29,11 +29,11 @@ def number_to_bits(number):
     binary_representation = bin(number)[2:]
     padded_binary = binary_representation.zfill(8)
     bits_list = [int(bit) for bit in padded_binary]
-    print('Número:', number, 'Representación binaria:', padded_binary)
+    #print('Número:', number, 'Representación binaria:', padded_binary)
     return bits_list
 #FREQUENCY MONOBIT TEST
 def monobit_test(sequence):
-    bits_sequence = [number_to_bits(num * 10000) for num in sequence]
+    bits_sequence = [number_to_bits(int(num * 10000)) for num in sequence]
     flat_bits_sequence = [bit for sublist in bits_sequence for bit in sublist]
     ones_count = sum(1 for bit in flat_bits_sequence if bit == 1)
     zeros_count = len(flat_bits_sequence) - ones_count

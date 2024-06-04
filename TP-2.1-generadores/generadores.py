@@ -37,12 +37,12 @@ def AlgorithmMiddleSquare(seed: int, n: int) -> list:
 
 h = AlgorithmMiddleSquare(5735, 100)
 print(h)
-# h2 = medianTest(h)
-# print('Runs Test Middle Square=',h2)
-# h3 = monobit_test(h)
-# print('Monibit Test Middle Square=',h3)
-# h4 = chi_test(h, 10, 0.05)
-# print('Chi Test Middle Square=',h4)
+h2 = medianTest(h)
+print('Runs Test Middle Square=',h2)
+h3 = monobit_test(h)
+print('Monibit Test Middle Square=',h3)
+h4 = chi_test(h, 10, 0.05)
+print('Chi Test Middle Square=',h4)
 h = generatorLGC(500, 106, 6075 , 1283,5000)
 plot_scatter(h, color=(0, 0, 0), alpha=0.5, title='Scatter plot', xlabel='x', ylabel='y')
 random_numbers = [random.random() for _ in range(5000)]
