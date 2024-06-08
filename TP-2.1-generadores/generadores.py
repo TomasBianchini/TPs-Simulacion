@@ -1,5 +1,3 @@
-from test import medianTest, monobit_test, chi_test
-from graph import plot_scatter, create_bitmap_image
 
 
 
