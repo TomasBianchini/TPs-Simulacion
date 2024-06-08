@@ -6,7 +6,7 @@ from scipy.stats import chi2
 
 
 #frequency_monobit_test
-def frequency_monobit_test(bit_sequence: str):
+def monobit_test(bit_sequence: str):
     n = len(bit_sequence)
     s = sum([1 if bit == '1' else -1 for bit in bit_sequence])
     s_obs = s / sqrt(n)
@@ -18,7 +18,7 @@ def frequency_monobit_test(bit_sequence: str):
         print("No pasa el Test de Frecuencia Monobit")
 
 #runs_test
-def runs_test(bit_sequence: str):
+def medianTest(bit_sequence: str):
     n = len(bit_sequence)
     pi = bit_sequence.count('1') / n
     V_n_obs = 1 + sum(bit_sequence[i] != bit_sequence[i + 1] for i in range(n - 1))
@@ -48,7 +48,7 @@ def number_to_bits(number):
 
 
 #chi_square_test
-def chi_square_test(sequence, confidence_level):
+def chi_test(sequence, confidence_level):
     n = len(sequence)
     m = int(sqrt(n))
 
@@ -84,7 +84,7 @@ sequence = [
     0.178, 0.516, 0.437, 0.393, 0.268, 0.123, 0.945, 0.527, 0.459, 0.652
 ]
 
-chi_square_test(sequence, 0.95)
+chi_test(sequence, 0.95)
 
 
 #testing frequency_monobit_test
