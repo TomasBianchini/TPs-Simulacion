@@ -68,4 +68,4 @@ def longest_run_test(binary_data):
     if p_value < 0.01:
         return ("La secuencia no es random. No pasa el test de la secuencia mas larga de unos.")
     else: 
-        return( "La secuencia es random segun el test." )
+        return( "La secuencia es random segun el test de la cantidad de unos por bloque." )
