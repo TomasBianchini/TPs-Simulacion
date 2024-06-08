@@ -1,25 +1,34 @@
 import numpy as np
 from math import sqrt
 from scipy.stats import norm
-def medianTest(numbers: list, alpha: float = .05) -> str:
-    mean_est = np.mean(numbers)
-    sec = [1 if r > mean_est else 0 for r in numbers] # 1 si es mayor a la media, 0 si es menor
-    c = 0
-    for i in range(1, len(sec)):
-        if sec[i-1] != sec[i]: 
-            c += 1
-    n_0 = sec.count(0) # Cantidad de 0
-    n_1 = sec.count(1) # Cantidad de 1
-    nn2 = 2*n_0*n_1 
-    n = len(sec)
-    mean = ((2 * n_1 * n_0) / (n_1 + n_0)) + 1 # Media
-    if n_1 == 0 or n_0 == 0:
-        return False
-    var_c = (nn2*(nn2-n))/((n**2)*(n-1))
-    z = (c-mean)/sqrt(var_c)
-    return abs(z) < norm.ppf(1-alpha/2)
+import scipy.special
 
 
+#frequency_monobit_test
+def frequency_monobit_test(bit_sequence: str):
+    n = len(bit_sequence)
+    s = sum([1 if bit == '1' else -1 for bit in bit_sequence])
+    s_obs = s / sqrt(n)
+    p_value = scipy.special.erfc(abs(s_obs) / sqrt(2))
+    print("p_value:", p_value)
+    if p_value >= 0.01:
+        print("Pasa el Test de Frecuencia Monobit")
+    else:
+        print("No pasa el Test de Frecuencia Monobit")
+
+#runs_test
+def runs_test(bit_sequence: str):
+    n = len(bit_sequence)
+    pi = bit_sequence.count('1') / n
+    V_n_obs = 1 + sum(bit_sequence[i] != bit_sequence[i + 1] for i in range(n - 1))
+    numerator = abs(V_n_obs - 2 * n * pi * (1 - pi))
+    denominator = 2 * pi * (1 - pi) * np.sqrt(2 * n)
+    p_value = scipy.special.erfc(numerator / denominator)
+    print("p_value:", p_value)
+    if p_value >= 0.01:
+        print("Pasa el Test de Pruebas de Rachas")
+    else:
+        print("No pasa el Test de Pruebas de Rachas")
 
 
 
@@ -31,18 +40,11 @@ def number_to_bits(number):
     bits_list = [int(bit) for bit in padded_binary]
     #print('Número:', number, 'Representación binaria:', padded_binary)
     return bits_list
-#FREQUENCY MONOBIT TEST
-def monobit_test(sequence):
-    bits_sequence = [number_to_bits(int(num * 10000)) for num in sequence]
-    flat_bits_sequence = [bit for sublist in bits_sequence for bit in sublist]
-    ones_count = sum(1 for bit in flat_bits_sequence if bit == 1)
-    zeros_count = len(flat_bits_sequence) - ones_count
-    proportion_ones = ones_count / len(flat_bits_sequence)
-    print('Proporción de unos:', proportion_ones)
-    if proportion_ones >= 0.45 and proportion_ones <= 0.55:
-        return "Pasa el Test de Frecuencia Monobit: Proporción de unos cercana a 0.5"
-    else:
-        return "No pasa el Test de Frecuencia Monobit: Proporción de unos no cercana a 0.5"
+
+
+
+
+
 
 # Test chi cuadrado
 def chi_test(numbers, k, alpha):
@@ -61,3 +63,13 @@ def chi_test(numbers, k, alpha):
 
 # h = monobit_test( [100000,1116544556151561,156154,51,1,515])
 # print(h)
+
+
+
+#testing frequency_monobit_test
+bit_sequence = '1100100100001111110110101010001000100001011010001100001000110100110001001100011001100010100010111000'
+frequency_monobit_test(bit_sequence)
+
+#testing runs_test
+bit_sequence = '1100100100001111110110101010001000100001011010001100001000110100110001001100011001100010100010111000'
+runs_test(bit_sequence)
