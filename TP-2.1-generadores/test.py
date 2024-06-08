@@ -2,6 +2,7 @@ import numpy as np
 from math import sqrt
 from scipy.stats import norm
 import scipy.special
+from scipy.stats import chi2
 
 
 #frequency_monobit_test
@@ -46,30 +47,50 @@ def number_to_bits(number):
 
 
 
-# Test chi cuadrado
-def chi_test(numbers, k, alpha):
-    n = len(numbers)
-    bins = np.linspace(0, 1, k + 1)
-    #bins= np.linspace(min(numbers), max(numbers), k + 1)
-    hist, _ = np.histogram(numbers, bins)
-    expected = n / k
-    chi = sum([(observed - expected) ** 2 / expected for observed in hist])
-    result = chi<norm.ppf(1-alpha, k-1)
-    print("Resultado del test con una confianza del", (1 - alpha  ) * 100, "%:",
-          "Pasa el test ChiCuad" if result else "No pasa el test ChiCuad")
-    return result
+#chi_square_test
+def chi_square_test(sequence, confidence_level):
+    n = len(sequence)
+    m = int(sqrt(n))
+
+    expected_frequency = len(sequence) / m
+
+    interval_size = 1.0 / m
+    bin_edges = [i * interval_size for i in range(m + 1)]
+    observed_frequencies, _ = np.histogram(sequence, bins=bin_edges)
+
+    chi_square_stat = sum((observed_frequencies - expected_frequency) ** 2 / expected_frequency)
+    degrees_of_freedom = m - 1
+    critical_value = chi2.ppf(confidence_level, degrees_of_freedom)
+
+    if chi_square_stat < critical_value:
+        print("La secuencia pasa la prueba Chi-cuadrado.")
+    else:
+        print("La secuencia no pasa la prueba Chi-cuadrado.")
 
 
 
-# h = monobit_test( [100000,1116544556151561,156154,51,1,515])
-# print(h)
 
+#testing chi_square_test
+sequence = [
+    0.347, 0.832, 0.966, 0.472, 0.797, 0.101, 0.696, 0.966, 0.404, 0.603,
+    0.993, 0.371, 0.729, 0.067, 0.189, 0.977, 0.843, 0.562, 0.549, 0.992,
+    0.674, 0.628, 0.055, 0.494, 0.494, 0.235, 0.178, 0.775, 0.797, 0.252,
+    0.426, 0.054, 0.022, 0.742, 0.674, 0.898, 0.641, 0.674, 0.821, 0.19,
+    0.46, 0.224, 0.99, 0.786, 0.393, 0.461, 0.011, 0.977, 0.246, 0.881,
+    0.189, 0.753, 0.73, 0.797, 0.292, 0.876, 0.707, 0.562, 0.562, 0.821,
+    0.112, 0.191, 0.584, 0.347, 0.426, 0.057, 0.819, 0.303, 0.404, 0.64,
+    0.37, 0.314, 0.731, 0.742, 0.213, 0.472, 0.641, 0.944, 0.28, 0.663,
+    0.909, 0.764, 0.999, 0.303, 0.718, 0.933, 0.056, 0.415, 0.819, 0.444,
+    0.178, 0.516, 0.437, 0.393, 0.268, 0.123, 0.945, 0.527, 0.459, 0.652
+]
+
+chi_square_test(sequence, 0.95)
 
 
 #testing frequency_monobit_test
-bit_sequence = '1100100100001111110110101010001000100001011010001100001000110100110001001100011001100010100010111000'
-frequency_monobit_test(bit_sequence)
+#bit_sequence = '1100100100001111110110101010001000100001011010001100001000110100110001001100011001100010100010111000'
+#frequency_monobit_test(bit_sequence)
 
 #testing runs_test
-bit_sequence = '1100100100001111110110101010001000100001011010001100001000110100110001001100011001100010100010111000'
-runs_test(bit_sequence)
+#bit_sequence = '1100100100001111110110101010001000100001011010001100001000110100110001001100011001100010100010111000'
+#runs_test(bit_sequence)
