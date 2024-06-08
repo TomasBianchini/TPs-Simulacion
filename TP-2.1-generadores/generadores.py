@@ -1,7 +1,7 @@
 
 
-
-def generatorLGC(seed, a, m,c, n) -> list:
+#GCL_generator
+def GCL_generator(seed, a, m,c, n) -> list:
     # Linear congruential generator
     numbers = [] # No se si es necesario agregar la semilla a la lista
     for i in range(n):
@@ -14,8 +14,8 @@ def generatorLGC(seed, a, m,c, n) -> list:
     return probabilities
 
 
-# Metodo de los cuadrados medios #
-def AlgorithmMiddleSquare(seed: int, n: int) -> list:
+#medium_square_generator
+def medium_square_generator(seed: int, n: int) -> list:
     D = len(str(seed))
     if D <= 3:
         raise ValueError("La semilla debe ser de al menos 4 dígitos")
@@ -42,5 +42,5 @@ def AlgorithmMiddleSquare(seed: int, n: int) -> list:
     return ri_list
 
 
-
-print(AlgorithmMiddleSquare(5735, 5))
+# testing medium_square_generator
+# print(medium_square_generator(5735, 5))

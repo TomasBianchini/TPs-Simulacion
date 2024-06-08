@@ -6,7 +6,7 @@ from scipy.stats import chi2
 
 
 #frequency_monobit_test
-def monobit_test(bit_sequence: str):
+def frequency_monobit_test(bit_sequence: str):
     n = len(bit_sequence)
     s = sum([1 if bit == '1' else -1 for bit in bit_sequence])
     s_obs = s / sqrt(n)
@@ -18,7 +18,7 @@ def monobit_test(bit_sequence: str):
         print("No pasa el Test de Frecuencia Monobit")
 
 #runs_test
-def medianTest(bit_sequence: str):
+def runs_test(bit_sequence: str):
     n = len(bit_sequence)
     pi = bit_sequence.count('1') / n
     V_n_obs = 1 + sum(bit_sequence[i] != bit_sequence[i + 1] for i in range(n - 1))
@@ -48,7 +48,7 @@ def number_to_bits(number):
 
 
 #chi_square_test
-def chi_test(sequence, confidence_level):
+def chi_square_test(sequence, confidence_level):
     n = len(sequence)
     m = int(sqrt(n))
 
@@ -70,7 +70,24 @@ def chi_test(sequence, confidence_level):
 
 
 
+
+
+
+
+#testing frequency_monobit_test
+'''
+bit_sequence = '1100100100001111110110101010001000100001011010001100001000110100110001001100011001100010100010111000'
+frequency_monobit_test(bit_sequence)
+'''
+
+#testing runs_test
+'''
+bit_sequence = '1100100100001111110110101010001000100001011010001100001000110100110001001100011001100010100010111000'
+runs_test(bit_sequence)
+'''
+
 #testing chi_square_test
+'''
 sequence = [
     0.347, 0.832, 0.966, 0.472, 0.797, 0.101, 0.696, 0.966, 0.404, 0.603,
     0.993, 0.371, 0.729, 0.067, 0.189, 0.977, 0.843, 0.562, 0.549, 0.992,
@@ -83,14 +100,5 @@ sequence = [
     0.909, 0.764, 0.999, 0.303, 0.718, 0.933, 0.056, 0.415, 0.819, 0.444,
     0.178, 0.516, 0.437, 0.393, 0.268, 0.123, 0.945, 0.527, 0.459, 0.652
 ]
-
-chi_test(sequence, 0.95)
-
-
-#testing frequency_monobit_test
-#bit_sequence = '1100100100001111110110101010001000100001011010001100001000110100110001001100011001100010100010111000'
-#frequency_monobit_test(bit_sequence)
-
-#testing runs_test
-#bit_sequence = '1100100100001111110110101010001000100001011010001100001000110100110001001100011001100010100010111000'
-#runs_test(bit_sequence)
+#chi_square_test(sequence, 0.95)
+'''
