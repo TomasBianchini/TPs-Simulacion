@@ -1,6 +1,6 @@
 from distribuciones import *
 '''
-#Distribucion UNIFORME
+#Distribucion UNIFORME (grafica muestra la probabilidad de cada numero)
 print("Ejemplo de Uniforme (4,10)") #limite inferior, limite superior
 print(uniformDistribution(4,10))
 
@@ -27,8 +27,7 @@ print(binomialDistribution(10,0.4,100))
 #Distribucion HIPERGEOMETRICA
 print("Ejemplo de Hipergeometrica (100,26,0.5,10)")#poblacion de tn elementos ,muestra de ns elementos, probabilidad de exito, intentos
 print(hypergeometricDistribution(100,26,0.5,100))
-
+'''
 #Distribucion POISSON
 print("Ejemplo de Poisson (5,100,10)")#lamda, cantidad de variables, intentos
-print(poissonDistribution(5,10,100))
-'''
+print(poissonDistribution(5,100,1000))
