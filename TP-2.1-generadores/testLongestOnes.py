@@ -9,11 +9,13 @@ def longest_run_test(binary_data):
     elif size_data < 6272:
         k, m = 3, 8
         v_values = [1, 2, 3, 4]
-        pik_values = [0.21484375, 0.3671875, 0.23046875, 0.1875]
+        #pik_values = [0.21484375, 0.3671875, 0.23046875, 0.1875]
+        pik_values = [0.2148, 0.3672, 0.2305, 0.1875]
     elif size_data < 75000:
         k, m = 5, 128
         v_values = [4, 5, 6, 7, 8, 9]
-        pik_values = [0.1174035788, 0.242955959, 0.249363483, 0.17517706, 0.102701071, 0.112398847]
+        #pik_values = [0.1174035788, 0.242955959, 0.249363483, 0.17517706, 0.102701071, 0.112398847]
+        pik_values = [0.1174, 0.2430, 0.2493, 0.1752, 0.1027, 0.1124]
     else:
         k, m = 6, 10000
         v_values = [10, 11, 12, 13, 14, 15, 16]
@@ -30,8 +32,8 @@ def longest_run_test(binary_data):
             block_data = binary_data[start:end] 
             #Cuento el numero de 1s que tiene el bloque
             actual_count, max_count = 0,0
-            for j in range(0,m):
-                if block_data[j]== 1 :   #DUDA: Vienen como string o como number?
+            for j in range(m):
+                if block_data[j]==1 :   #DUDA: Vienen como string o como number?
                     actual_count += 1
                     max_count = max(actual_count, max_count) 
                 else:
@@ -41,7 +43,7 @@ def longest_run_test(binary_data):
             #ASINGO LAS FRECUENCIAS SEGUN LOS Valores DADOS POR NIST ¿¿?? (Sale de la tablita del PDF)
             if max_count <= v_values[0]:
                 frequencies[0] += 1  
-            for j in range(k):
+            for j in range(1,k):
                 if max_count == v_values[j]:
                     frequencies[j] += 1
             if max_count > v_values[k - 1]:
@@ -50,11 +52,17 @@ def longest_run_test(binary_data):
             end += m
 
             #Computo la prueba CHI CUADRADO segun los valores dados por nist. 
-    chi_sq = 0
+    chi_square=0
     for i in range (len(frequencies)):
-        chi_sq += pow(v_values[i]- n*pik_values[i],2)/(n*pik_values[i])
-        #p_value = stats.chisquare(chi_sq,k)
-        p_value= gammaincc((k/2),(chi_sq/2))
+        chi_square += ((frequencies[i]- n*pik_values[i])**2)/(n*pik_values[i])
+
+  
+    p_value= gammaincc((k/2),(chi_square/2))
+    #print('P_VALUE:' , p_value)
+    #print ('CHI_SQ:', chi_square)
+    #print('Cant Bloques:',n)
+    #print('M: ', m)
+    #print('K: ', k)
 
     #Analizamos el resultado:
     if p_value < 0.01:
