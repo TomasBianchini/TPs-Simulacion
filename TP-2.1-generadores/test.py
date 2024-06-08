@@ -2,8 +2,8 @@ import numpy as np
 from math import sqrt
 from scipy.stats import norm
 import scipy.special
-from scipy.stats import chi2
-
+from scipy.stats import chi2 
+from scipy.special import gammaincc
 
 #frequency_monobit_test
 def frequency_monobit_test(bit_sequence: str):
@@ -13,9 +13,9 @@ def frequency_monobit_test(bit_sequence: str):
     p_value = scipy.special.erfc(abs(s_obs) / sqrt(2))
     print("p_value:", p_value)
     if p_value >= 0.01:
-        print("Pasa el Test de Frecuencia Monobit")
+        print("Pasa la prueba de frecuencia monobit.")
     else:
-        print("No pasa el Test de Frecuencia Monobit")
+        print("No pasa la prueba de frecuencia monobit.")
 
 #runs_test
 def runs_test(bit_sequence: str):
@@ -27,9 +27,9 @@ def runs_test(bit_sequence: str):
     p_value = scipy.special.erfc(numerator / denominator)
     print("p_value:", p_value)
     if p_value >= 0.01:
-        print("Pasa el Test de Pruebas de Rachas")
+        print("Pasa la prueba de rachas.")
     else:
-        print("No pasa el Test de Pruebas de Rachas")
+        print("No pasa la prueba de rachas.")
 
 
 
@@ -43,29 +43,93 @@ def number_to_bits(number):
     return bits_list
 
 
+#longest_run_test
+def longest_run_test(bit_sequence):
+    h = []
+    for b in bit_sequence: h.append(int(b))
 
+    size_data = len(h)
+    if size_data < 128:
+        return ("No hay suficientes tados para realizar el test segun NEST")
+    elif size_data < 6272:
+        k, m = 3, 8
+        v_values = [1, 2, 3, 4]
+        #pik_values = [0.21484375, 0.3671875, 0.23046875, 0.1875]
+        pik_values = [0.2148, 0.3672, 0.2305, 0.1875]
+    elif size_data < 75000:
+        k, m = 5, 128
+        v_values = [4, 5, 6, 7, 8, 9]
+        #pik_values = [0.1174035788, 0.242955959, 0.249363483, 0.17517706, 0.102701071, 0.112398847]
+        pik_values = [0.1174, 0.2430, 0.2493, 0.1752, 0.1027, 0.1124]
+    else:
+        k, m = 6, 10000
+        v_values = [10, 11, 12, 13, 14, 15, 16]
+        pik_values = [0.0882, 0.2092, 0.2483, 0.1933, 0.1208, 0.0675, 0.0727]
+    
+    start=0
+    end = m
+    n = size_data//m
+    values_max_block = np.zeros(n,dtype=int)
+    frequencies = np.zeros(k + 1)
+    for i in range (n):
+            block_data = h[start:end] 
+            actual_count, max_count = 0,0
+            for j in range(m):
+                if block_data[j]==1 :
+                    actual_count += 1
+                    max_count = max(actual_count, max_count) 
+                else:
+                    max_count = max(actual_count, max_count)
+                    actual_count = 0
+            values_max_block[i] = max_count
+            if max_count <= v_values[0]:
+                frequencies[0] += 1  
+            for j in range(1,k):
+                if max_count == v_values[j]:
+                    frequencies[j] += 1
+            if max_count > v_values[k - 1]:
+                frequencies[k] += 1
+            start += m
+            end += m
 
+    chi_square=0
+    for i in range (len(frequencies)):
+        chi_square += ((frequencies[i]- n*pik_values[i])**2)/(n*pik_values[i])
+
+  
+    p_value= gammaincc((k/2),(chi_square/2))
+    #print('P_VALUE:' , p_value)
+    #print ('CHI_SQ:', chi_square)
+    #print('Cant Bloques:',n)
+    #print('M: ', m)
+    #print('K: ', k)
+
+    #Analizamos el resultado:
+    if p_value < 0.01:
+        print("Pasa la prueba de la racha más larga de unos.")
+    else: 
+        print( "Pasa la prueba de la racha más larga de unos." )
 
 
 #chi_square_test
-def chi_square_test(sequence, confidence_level):
-    n = len(sequence)
+def chi_square_test(decimal_sequence, confidence_level):
+    n = len(decimal_sequence)
     m = int(sqrt(n))
 
-    expected_frequency = len(sequence) / m
+    expected_frequency = len(decimal_sequence) / m
 
     interval_size = 1.0 / m
     bin_edges = [i * interval_size for i in range(m + 1)]
-    observed_frequencies, _ = np.histogram(sequence, bins=bin_edges)
+    observed_frequencies, _ = np.histogram(decimal_sequence, bins=bin_edges)
 
     chi_square_stat = sum((observed_frequencies - expected_frequency) ** 2 / expected_frequency)
     degrees_of_freedom = m - 1
     critical_value = chi2.ppf(confidence_level, degrees_of_freedom)
 
     if chi_square_stat < critical_value:
-        print("La secuencia pasa la prueba Chi-cuadrado.")
+        print("Pasa la prueba de Chi-cuadrado.")
     else:
-        print("La secuencia no pasa la prueba Chi-cuadrado.")
+        print("Pasa la prueba de Chi-cuadrado.")
 
 
 
@@ -86,9 +150,15 @@ bit_sequence = '1100100100001111110110101010001000100001011010001100001000110100
 runs_test(bit_sequence)
 '''
 
+#testing longest_run_test
+'''
+bit_sequence = '11001100000101010110110001001100111000000000001001001101010100010001001111010110100000001101011111001100111001101101100010110010'
+longest_run_test(bit_sequence)
+'''
+
 #testing chi_square_test
 '''
-sequence = [
+decimal_sequence = [
     0.347, 0.832, 0.966, 0.472, 0.797, 0.101, 0.696, 0.966, 0.404, 0.603,
     0.993, 0.371, 0.729, 0.067, 0.189, 0.977, 0.843, 0.562, 0.549, 0.992,
     0.674, 0.628, 0.055, 0.494, 0.494, 0.235, 0.178, 0.775, 0.797, 0.252,
@@ -100,5 +170,5 @@ sequence = [
     0.909, 0.764, 0.999, 0.303, 0.718, 0.933, 0.056, 0.415, 0.819, 0.444,
     0.178, 0.516, 0.437, 0.393, 0.268, 0.123, 0.945, 0.527, 0.459, 0.652
 ]
-#chi_square_test(sequence, 0.95)
+#chi_square_test(decimal_sequence, 0.95)
 '''
