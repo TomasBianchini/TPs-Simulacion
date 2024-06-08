@@ -1,6 +1,8 @@
 from test import medianTest, monobit_test, chi_test
 from graph import plot_scatter, create_bitmap_image
-import random 
+
+
+
 def generatorLGC(seed, a, m,c, n) -> list:
     # Linear congruential generator
     numbers = [] # No se si es necesario agregar la semilla a la lista
@@ -12,12 +14,6 @@ def generatorLGC(seed, a, m,c, n) -> list:
         numbers.append(next_number)
         probabilities = [number / (m-1) for number in numbers]  # Excluimos la semilla de la lista final
     return probabilities
-h = generatorLGC(1, 1664525, 2**32 , 1013904223,10)
-print(h)
-# h2 = medianTest(h)
-# print('Runs Test Linear Congrutial Generator=',h2)
-# h3 = monobit_test(h)
-#print('Monibit Test Linear Congrutial Generator=',h3)
 
 
 # Metodo de los cuadrados medios #
@@ -35,27 +31,3 @@ def AlgorithmMiddleSquare(seed: int, n: int) -> list:
         r_i.append(X_n / (10 ** D))
     return r_i
 
-h = AlgorithmMiddleSquare(5735, 100)
-print(h)
-h2 = medianTest(h)
-print('Runs Test Middle Square=',h2)
-h3 = monobit_test(h)
-print('Monibit Test Middle Square=',h3)
-h4 = chi_test(h, 10, 0.05)
-print('Chi Test Middle Square=',h4)
-h = generatorLGC(500, 106, 6075 , 1283,5000)
-plot_scatter(h, color=(0, 0, 0), alpha=0.5, title='Scatter plot', xlabel='x', ylabel='y')
-random_numbers = [random.random() for _ in range(5000)]
-plot_scatter(random_numbers, color=(0, 0, 0), alpha=0.5, title='Scatter plot', xlabel='x', ylabel='y')
-
-# Generar números pseudoaleatorios usando tu generador LCG
-lcg_numbers = generatorLGC(1, 1664525, 2**32, 1013904223, 512 * 512)
-#print(lcg_numbers)
-# Crear una imagen de bitmap a partir de los números generados
-create_bitmap_image(lcg_numbers, 512, 512, "lcg_bitmap.png")
-
-# Generar números pseudoaleatorios usando el método Middle Square
-middle_square_numbers = AlgorithmMiddleSquare(8217, 512 * 512)
-#print(middle_square_numbers)
-# Crear una imagen de bitmap a partir de los números generados
-create_bitmap_image(middle_square_numbers, 512, 512, "middle_square_bitmap.png")

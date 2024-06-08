@@ -1,10 +1,11 @@
 import numpy   
-import scipy.stats as stats
+from scipy.special import gammaincc
+
 
 def longest_run_test(binary_data):
     size_data = len(binary_data)
     if size_data < 128:
-        return "No hay suficientes tados para realizar el test segun NEST"
+        return ("No hay suficientes tados para realizar el test segun NEST")
     elif size_data < 6272:
         k, m = 3, 8
         v_values = [1, 2, 3, 4]
@@ -20,15 +21,15 @@ def longest_run_test(binary_data):
     
      #Divido los bloques de tamaño M
         
-        start=0
-        end = m
-        values_max_block = []
-        frequencies = numpy.zeros(k + 1)
-        n = size_data//m
-        for i in range (n):
+    start=0
+    end = m
+    n = size_data//m
+    values_max_block = numpy.zeros(n,dtype=int)
+    frequencies = numpy.zeros(k + 1)
+    for i in range (n):
             block_data = binary_data[start:end] 
             #Cuento el numero de 1s que tiene el bloque
-            actual_count, max_count = 0
+            actual_count, max_count = 0,0
             for j in range(0,m):
                 if block_data[j]== 1 :   #DUDA: Vienen como string o como number?
                     actual_count += 1
@@ -49,13 +50,14 @@ def longest_run_test(binary_data):
             end += m
 
             #Computo la prueba CHI CUADRADO segun los valores dados por nist. 
-            chi_sq = 0
-            for i in range (len(frequencies)):
-                chi_sq += pow(v_values[i]- n*pik_values[i],2)/(n*pik_values[i])
-            p_value = stats.chisquare(chi_sq,k)
+    chi_sq = 0
+    for i in range (len(frequencies)):
+        chi_sq += pow(v_values[i]- n*pik_values[i],2)/(n*pik_values[i])
+        #p_value = stats.chisquare(chi_sq,k)
+        p_value= gammaincc((k/2),(chi_sq/2))
 
-            #Analizamos el resultado:
-            if p_value < 0.01:
-                return "La secuencia no es random. No pasa el test."
-            else: 
-                return "La secuencia es random segun el test."
+    #Analizamos el resultado:
+    if p_value < 0.01:
+        return ("La secuencia no es random. No pasa el test de la secuencia mas larga de unos.")
+    else: 
+        return( "La secuencia es random segun el test." )
