@@ -1,7 +1,7 @@
 import numpy as np
 from math import sqrt
 from scipy.stats import norm
-def runsTest(numbers: list, alpha: float = .05) -> str:
+def medianTest(numbers: list, alpha: float = .05) -> str:
     mean_est = np.mean(numbers)
     sec = [1 if r > mean_est else 0 for r in numbers] # 1 si es mayor a la media, 0 si es menor
     c = 0
@@ -29,11 +29,11 @@ def number_to_bits(number):
     binary_representation = bin(number)[2:]
     padded_binary = binary_representation.zfill(8)
     bits_list = [int(bit) for bit in padded_binary]
-    print('Número:', number, 'Representación binaria:', padded_binary)
+    #print('Número:', number, 'Representación binaria:', padded_binary)
     return bits_list
 #FREQUENCY MONOBIT TEST
 def monobit_test(sequence):
-    bits_sequence = [number_to_bits(num) for num in sequence]
+    bits_sequence = [number_to_bits(int(num * 10000)) for num in sequence]
     flat_bits_sequence = [bit for sublist in bits_sequence for bit in sublist]
     ones_count = sum(1 for bit in flat_bits_sequence if bit == 1)
     zeros_count = len(flat_bits_sequence) - ones_count
@@ -47,8 +47,8 @@ def monobit_test(sequence):
 # Test chi cuadrado
 def chi_test(numbers, k, alpha):
     n = len(numbers)
-    #bins = np.linspace(0, 1, k + 1)
-    bins= np.linspace(min(numbers), max(numbers), k + 1)
+    bins = np.linspace(0, 1, k + 1)
+    #bins= np.linspace(min(numbers), max(numbers), k + 1)
     hist, _ = np.histogram(numbers, bins)
     expected = n / k
     chi = sum([(observed - expected) ** 2 / expected for observed in hist])
@@ -59,5 +59,5 @@ def chi_test(numbers, k, alpha):
 
 
 
-h = monobit_test( [100000,1116544556151561,156154,51,1,515])
-print(h)
+# h = monobit_test( [100000,1116544556151561,156154,51,1,515])
+# print(h)

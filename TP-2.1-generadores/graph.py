@@ -17,9 +17,11 @@ def plot_scatter(list, color=(0, 0, 0), alpha=0.5, title='Scatter plot', xlabel=
     - ylabel: Etiqueta del eje y.
     """
     area = np.pi * 3
-    y= list 
-    #y = list[1:]+[list[0]] 
-    x = np.arange(1, len(y) + 1)
+    # y= list
+    # x = np.arange(1, len(y) + 1) 
+    x=list
+    y = list[1:]+[list[0]] 
+    
 
     # Creación del gráfico de dispersión
     plt.scatter(x, y, s=area, c=[color], alpha=alpha)
@@ -38,7 +40,7 @@ def create_bitmap_image(numbers, width, height, output_filename):
     for y in range(height):
         for x in range(width):
             # Escalar el valor para que esté dentro del rango RGB (0-255)
-            color_value = int(numbers[index] / (2**32 - 1) * 255)
+            color_value = int(numbers[index] * 255)
             # Establecer el color del píxel
             pixels[x, y] = (color_value, color_value, color_value)
             index += 1
