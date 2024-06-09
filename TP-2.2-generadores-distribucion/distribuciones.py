@@ -37,6 +37,44 @@ def runtestUDM(numeros, a):
     Ztabla = round(sp.stats.norm.ppf(1 - a / 2), 3)
     print("Resultado del test con una confianza del", (1 - (a * 2)) * 100, "%:",
           "No pasa el test" if z > Ztabla else "Pasa el test")
+
+
+# Uniforme
+def uniforme(numbers, a, b) -> list:
+    num = []
+    m = 1 / (b - a)
+    for n in numbers:
+        while True:
+            v = np.random.uniform(0, 1)
+            t = a + ((b - a) * v)
+            if (m* n <= 1 / (b - a)):
+                num.append(t)
+                break
+    return num
+    
+def mainUniforme():
+    n = 1000
+    a, b = 0, 10
+    numbers = [random.uniform(0, 1) for i in range(n)]
+
+    # Definir funcion de densidad y graficar para comparar
+    x = np.linspace(uniform.ppf(0.0001, loc=a, scale=b - a), uniform.ppf(0.999, loc=a, scale=b - a), 100)
+    fig, ax = plt.subplots(1, 1)
+    ax.plot(x, uniform.pdf(x, loc=a, scale=b - a), 'r-', lw=2, alpha=0.6, label='uniforme')
+    ax.legend(loc='best', frameon=False)
+
+    # Histograma de densidades de x aceptadas por el metodo de rechazo
+    num = uniforme(numbers, a, b)
+    ax.hist(num, density=True, bins='auto', histtype='stepfilled')
+    plt.ylabel("Densidad de ocurrencias")
+    plt.xlabel("Valor de la variable")
+    plt.title('Histograma de una VA con distribucion Uniforme-Aceptacion y rechazo')
+    plt.show()
+    runtestUDM(num, 0.025)
+
+
+mainUniforme()
+
     
 ##EXPONENCIAL
 lam = 0.5
@@ -48,7 +86,7 @@ def densidad_exponencial(lam, x) -> float:
     else:
         return lam * math.exp(-lam * x)
     
-def Exponencialr(numeros, lam, n) -> list:
+def exponencialr(numeros, lam, n) -> list:
     M = densidad_exponencial(lam, 1 / lam)
     exponencial = []
     cont = 0
@@ -63,7 +101,7 @@ def Exponencialr(numeros, lam, n) -> list:
 
 def mainExp():
     numero = [random.uniform(0, 1) for i in range(n)]
-    num = Exponencialr(numero, lam, n)
+    num = exponencialr(numero, lam, n)
 
     # Definir funcion de densidad y graficar para comparar
     x = np.linspace(expon.ppf(0.0001, scale=1 / lam), expon.ppf(0.999, scale=1 / lam), 100)
@@ -80,6 +118,47 @@ def mainExp():
     runtestUDM(num, 0.025)
 
 mainExp()
+
+# GAMMA
+
+k = 2
+theta = 1.8  #Donde k es Alpha y theta es beta
+n = 1000
+samples = []  # Almacenamiento de muestras válidas
+
+
+def gamma_pdf(x, k, theta):
+    return gamma.pdf(x,k, scale = 1/theta)
+
+def randGamma():
+    while len(samples) < n:
+        x = np.random.exponential(theta*(k+1))
+        u = np.random.uniform(0, 1)
+
+        if u*maxY <= gamma_pdf(x, k, theta):
+            samples.append(x)
+
+# Función de densidad de probabilidad de la distribución gamma
+x_vals = np.linspace(0, gamma.ppf(0.999, k,scale = 1/theta), 1000)
+y_vals = gamma_pdf(x_vals, k, theta)
+maxY = max(y_vals)
+plt.plot(x_vals, y_vals, 'r', label='Función de densidad de probabilidad')
+
+
+
+# Histograma de muestras generadas
+randGamma()
+plt.hist(samples, bins='sqrt', density=True, label='Muestras generadas', edgecolor = 'black')
+
+# Configuración del gráfico
+plt.title('Histograma de una VA con distribucion Gamma-Aceptacion y rechazo')
+plt.xlabel('Valor de la variable')
+plt.ylabel('Densidad de probabilidad')
+plt.legend()
+plt.show()
+
+
+
 
 #NORMAL
 n = 1000
@@ -121,6 +200,59 @@ plt.legend(loc='best', frameon=False)
 plt.show()
 runtestUDM(distNormal, 0.025)
 
+# Pascal
+
+def densPascal(r, p, x):
+    return comb(x+r-1, x) * p ** r * (1 - p) ** (x)  # la funcion comb sirve para calcular los coeficientes binomiales.
+
+
+def pascalR(numeros, r, p):
+    m = densPascal(r, p, int(r*(1-p)/p))  # Cálculo del máximo de la densidad binomial
+    pascal = []
+    for u in numeros:
+        v = np.random.uniform(0, 1)  # Generar un número aleatorio en el intervalo [0, 1]
+        t = int(2*r*v)  # Obtener el valor entero de la parte entera de n * V
+        if (m * u <= densPascal(r, p, t)):  # Evaluar la densidad pascal en T
+            pascal.append(t)  # Si el valor de la densidad evaluada es mayor que el umbral U,
+            # entonces se acepta el valor T y se añade a la lista pascal
+    return pascal
+
+
+n = 1000
+r, p = 40, .5
+distPascal = np.random.uniform(0, 1, n)
+num = pascalR(distPascal, r, p)
+"""
+distPascal = np.random.uniform(0, 1, n)  # La función devuelve una matriz NumPy de longitud n con los números aleatorios distribuidos uniformemente en el rango [0,1].
+
+distPascal = pascalRech(distPascal, r, p)
+plt.hist(distPascal, bins=round(sqrt(len(distPascal))), edgecolor='black')
+plt.title('Histograma de una VA con distribucion Pascal-Aceptacion y rechazo')
+plt.xlabel('Valor de la variable')
+plt.ylabel('Ocurrencias')
+plt.show() """
+
+def mainPascal():
+    distPascal = np.random.uniform(0, 1, n)
+    num = pascalR(distPascal, r, p)
+
+    # Definir función de densidad y graficar para comparar
+    x = np.arange(nbinom.ppf(0.0001, r, p), nbinom.ppf(0.999, r, p))
+    plt.plot(x, nbinom.pmf(x, r, p), '-r', ms=2, label='distribucion binomial negativa')
+
+    # Histograma de densidades de x aceptadas por el metodo de rechazo
+    plt.hist(num, density=True, bins='auto', alpha=0.5, label='histograma')
+
+    plt.legend(loc='best', frameon=False)
+    plt.ylabel("Densidad de ocurrencias")
+    plt.xlabel("Valor de la variable")
+    plt.title('Histograma de una VA con distribucion Pascal-Aceptacion y rechazo')
+    plt.show()
+
+mainPascal()
+
+
+
 #BINOMIAL
 
 def densBinomial(n, p, x):
@@ -153,6 +285,64 @@ plt.legend(loc='best', frameon=False)
 plt.ylabel("Densidad de ocurrencias")
 plt.show()
 runtestUDM(distBinomial, 0.025)
+
+# Hipergeometrica
+def dens_hipergeometrica(m, N, n, x):
+    return hypergeom.pmf(x, m, N, n)
+
+
+def dist_hipergeometrica(numeros, m, N, n) -> list:
+
+    media = n*N/m
+    p = dens_hipergeometrica(m, N, n, media)
+    hiper_lista = []
+    for U in numeros:
+        while True:
+            V = np.random.uniform(0, 1)
+            O = int(n*V)
+            if(p*U <= dens_hipergeometrica(m, N, n, O)):
+                hiper_lista.append(O)
+                break
+    return hiper_lista
+
+i = 1000 #rango
+M = 200  # Tamaño de la población
+n = 40  # Tamaño de la muestra
+N = 30  # Número de elementos en la población con la propiedad que se está estudiando
+
+
+distHiper = np.random.uniform(0, 1, i) # La función devuelve una matriz NumPy de longitud n con los números aleatorios distribuidos uniformemente en el rango [0,1].
+distHiper = dist_hipergeometrica(distHiper, M, N,n)
+
+
+# Valores de k para los cuales se quiere graficar la densidad
+k_values = np.arange(0, n+1)
+
+# Calculo de la función de masa de probabilidad
+pmf_values = hypergeom.pmf(k_values, M, N, n)
+fig, ax = plt.subplots()
+
+
+#Histograma de densidades de x aceptadas por el metodo de rechazo
+hist, bins, _ = plt.hist(distHiper, density=True, bins=range(n+2), edgecolor='black', align='left')
+plt.xlim(0, n)
+plt.xticks(range(0, n+1, 5))  # Mostrar valores de x de 5 en 5
+plt.ylabel("Densidad de ocurrencias")
+plt.xlabel("Valor de la variable")
+plt.title('Histograma de una VA con distribucion Hipergeometrica-Aceptacion y rechazo')
+
+# densidad maxima
+pmf_max = hypergeom.pmf(np.arange(0, n+1), M, N, n).max()
+
+
+# Grafica de la densidad
+k_values = np.arange(0, n+1)
+pmf_values = hypergeom.pmf(k_values, M, N, n)
+plt.plot(k_values, pmf_values, 'r-', ms=8, lw=2, alpha=0.6,label='Hipergeometrica')
+plt.legend(loc='best', frameon=False)
+
+
+
 
 
 #POISSON
@@ -202,6 +392,68 @@ plt.plot(x, pmf_values, 'r-', ms=8, lw=2, alpha=0.6, label='Poisson')
 plt.legend(loc='best', frameon=False)
 plt.show()
 runtestUDM(distPoisson, 0.025)
+
+# Empirica 
+
+cant = 1000
+
+
+def randEmpirica(numeros, min_x, lista_fr) -> list:
+    n = len(lista_fr)
+    a, b = min_x, min_x + n
+    frec_rel = dict()
+
+    max = __builtins__.max
+    M = max(lista_fr)
+
+    empiric = []
+    for i in range(a, b):
+        frec_rel.setdefault(i, lista_fr.pop(0))
+    for U in numeros:
+        while True:
+            V = np.random.uniform(0, 1)
+            T = trunc(a + (b - a) * V)
+            if T not in frec_rel.keys():
+                break
+            if (M * U <= frec_rel[T]):
+                empiric.append(T)
+                break
+    return empiric
+
+
+pseudo = [np.random.uniform(0, 1) for _ in range(cant)]
+lista = [0.092, 0.023, 0.168, 0.017, 0.014, 0.245, 0.019, 0.213, 0.114,
+         0.085]  # numeros para probar, la suma de probabilidades debe ser igual a 1
+plt.plot(lista, color='red')
+R = randEmpirica(pseudo, 0, lista)
+plt.hist(R, density=True, bins=10)
+plt.ylabel("Densidad de ocurrencias")
+plt.xlabel("Valor de la variable")
+plt.title('Histograma de una VA con distribucion Empirica-Aceptacion y rechazo')
+plt.show()
+
+print(mean(R))
+
+runtestUDM(R, 0.025)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #UNIFORME INVERSA
 def transformada_inversa_uniforme(a, b, x):
