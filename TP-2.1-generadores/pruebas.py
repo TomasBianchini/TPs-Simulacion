@@ -1,6 +1,6 @@
 from generadores import GCL_generator, medium_square_generator 
 from test import runs_test, frequency_monobit_test, chi_square_test, number_to_bits
-from graph import plot_scatter, create_bitmap_image
+from graph import plot_scatter, create_bitmap_image, histogram
 from testLongestOnes import longest_run_test
 import random
 
@@ -75,8 +75,23 @@ print('Cantidades de unos seguidas:' , longest_run_test(h5))
 
 """
 
+"""
+
 ##PRUEBA TEST ONES - FUNCIONA CORRECTAMENTE
 s = '11001100000101010110110001001100111000000000001001001101010100010001001111010110100000001101011111001100111001101101100010110010'
 h = []
 for b in s: h.append(int(b))
 print(longest_run_test(h))
+"""
+
+##GRAFICO DE CORRELACION LINEAL 
+# plot_scatter(h, color=(0, 0, 0), alpha=0.5, title='Scatter plot - Generador GCL', xlabel='x', ylabel='y')
+##BITMAP
+# create_bitmap_image(h, 512, 512, "middle_square_bitmap.png")
+
+
+
+h = GCL_generator(3920, (1+4*9791), 6075 , 1283,5000) # 6075 , 1283 son coprimos
+print(h)
+histogram(h)
+plot_scatter(h, color=(0, 0, 0), alpha=0.5, title='Scatter plot - Generador GCL', xlabel='x', ylabel='y')

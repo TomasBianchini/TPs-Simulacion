@@ -49,3 +49,10 @@ def create_bitmap_image(numbers, width, height, output_filename):
     im.save(output_filename)
     im.show()
 
+
+def histogram(values):
+    # Creas el histograma con intervalos de 0.10
+    plt.hist(values, bins=[i/10 for i in range(11)], edgecolor='black')
+
+    # Muestras el histograma
+    plt.show()
