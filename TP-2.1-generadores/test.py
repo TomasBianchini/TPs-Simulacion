@@ -106,9 +106,9 @@ def longest_run_test(bit_sequence):
 
     #Analizamos el resultado:
     if p_value < 0.01:
-        print("Pasa la prueba de la racha más larga de unos.")
+        print("NO pasa la prueba Test de Cantidad de Unos por Bloque")
     else: 
-        print( "Pasa la prueba de la racha más larga de unos." )
+        print( "SI Pasa la prueba Test de Cantidad de Unos por Bloque" )
 
 
 #chi_square_test
@@ -127,12 +127,25 @@ def chi_square_test(decimal_sequence, confidence_level):
     critical_value = chi2.ppf(confidence_level, degrees_of_freedom)
 
     if chi_square_stat < critical_value:
-        print("Pasa la prueba de Chi-cuadrado.")
+        print("Pasa la prueba de Chi-cuadrado. ") #No se puede afirmar que no sigue una distribucion uniforme
     else:
-        print("Pasa la prueba de Chi-cuadrado.")
+        print("NO pasa la prueba de Chi-cuadrado.")
 
 
+def generator_to_tests(numbers_generated):
+    h5 = []
+    """ decimal = []
+    for i in numbers_generated:
+        decimal.append(int(i*10000))
+    print (decimal)  """
+    for i in numbers_generated:
+        h5.extend(number_to_bits(int(i*10000)))
+    return(h5)
 
+def array_to_string(bits_array):
+    bits_array = list(map(str, bits_array))
+    cadena = ''.join(bits_array)
+    return cadena
 
 
 

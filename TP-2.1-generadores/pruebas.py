@@ -1,7 +1,6 @@
 from generadores import GCL_generator, medium_square_generator 
-from test import runs_test, frequency_monobit_test, chi_square_test, number_to_bits
+from test import runs_test, frequency_monobit_test, chi_square_test, number_to_bits, generator_to_tests, array_to_string, longest_run_test
 from graph import plot_scatter, create_bitmap_image, histogram
-from testLongestOnes import longest_run_test
 import random
 
 
@@ -90,8 +89,44 @@ print(longest_run_test(h))
 # create_bitmap_image(h, 512, 512, "middle_square_bitmap.png")
 
 
-
+"""
+##HISTOGRAMA NO ALEATORIO 
 h = GCL_generator(3920, (1+4*9791), 6075 , 1283,5000) # 6075 , 1283 son coprimos
 print(h)
 histogram(h)
 plot_scatter(h, color=(0, 0, 0), alpha=0.5, title='Scatter plot - Generador GCL', xlabel='x', ylabel='y')
+
+"""
+
+#h = GCL_generator(5845,(1+4*1060),(2**15), 1529, 9989) no cumple con las reglas pero funciona bien
+#h=GCL_generator(1229, (1+4*8738),4611686018427387904, 7095,5000) CUMPLE CON TODO
+#h=GCL_generator(4426, 2076,5473656, 7095,5000) NO CUMPLE CON LAS REGALAS-FUNCIONA MAL
+#h=GCL_generator(3368,(1+4*8546),33554432, 5681,500) a mayor n no pasa los test
+
+
+#GENERADOR DE C++
+#9859, 6876 
+#h=GCL_generator(6876,22695477,(2**32),1,10000)
+#CON n=5000 no pasa las de uno, con n=10000 si las pasa
+
+#GENERADOR ANSI C
+h=GCL_generator(6876,22695477,(2**32),1,10000)
+histogram(h)
+plot_scatter(h, color=(0, 0, 0), alpha=0.5, title='Scatter plot - Generador GCL', xlabel='x', ylabel='y')
+
+print('Chi Test Middle Square=')
+chi_square_test(h, 0.95)
+
+bits_array = generator_to_tests(h)
+bits_string = array_to_string(bits_array)
+
+
+
+print('Monibit Test Middle Square=')
+frequency_monobit_test(bits_string)
+
+print('Cantidades de unos seguidas por bloque=')
+print(longest_run_test(bits_array))
+
+print('Runs Test Middle Square=')
+runs_test(bits_string)
