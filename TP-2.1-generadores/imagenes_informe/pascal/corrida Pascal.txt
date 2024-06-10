@@ -1,0 +1,84 @@
+---------------------------------------------------------
+--------------------SEED: 37 ----------------------------
+---------------------------------------------------------
+---- CHI SQUARE TEST ----
+CRITICAL VALUE:  123.2252214533618     
+CHI SQUARE STAT:  96.11999999999999    
+Pasa la prueba de Chi-cuadrado.        
+---------------------------------------
+---- FRECUENCY MONOBIT TEST ----
+p_value: 5.792987127007239e-51
+No pasa la prueba de frecuencia monobit.
+--------------------------------------- 
+---- LONGEST ONES SECUENCY TEST ----    
+P_VALUE: 0.1161975872748427
+SI Pasa la prueba Test de Cantidad de Unos por Bloque
+---------------------------------------
+None
+---- RUNS TEST ----
+p_value: 0.30756450431887794
+Pasa la prueba de rachas.
+---------------------------------------
+---------------------------------------------------------
+--------------------SEED: 2500 ----------------------------
+---------------------------------------------------------
+---- CHI SQUARE TEST ----
+CRITICAL VALUE:  123.2252214533618
+CHI SQUARE STAT:  87.61999999999995
+Pasa la prueba de Chi-cuadrado.
+---------------------------------------
+---- FRECUENCY MONOBIT TEST ----
+p_value: 2.422315984890013e-53
+No pasa la prueba de frecuencia monobit.
+---------------------------------------
+---- LONGEST ONES SECUENCY TEST ----
+P_VALUE: 0.06476805253857783
+SI Pasa la prueba Test de Cantidad de Unos por Bloque
+---------------------------------------
+None
+---- RUNS TEST ----
+p_value: 0.0012937416709589479
+No pasa la prueba de rachas.
+---------------------------------------
+---------------------------------------------------------
+--------------------SEED: 6876 ----------------------------
+---------------------------------------------------------
+---- CHI SQUARE TEST ----
+CRITICAL VALUE:  123.2252214533618
+CHI SQUARE STAT:  90.13999999999999
+Pasa la prueba de Chi-cuadrado.
+---------------------------------------
+---- FRECUENCY MONOBIT TEST ----
+p_value: 4.732973062073792e-62
+No pasa la prueba de frecuencia monobit.
+---------------------------------------
+---- LONGEST ONES SECUENCY TEST ----
+P_VALUE: 0.3096657716435179
+SI Pasa la prueba Test de Cantidad de Unos por Bloque
+---------------------------------------
+None
+---- RUNS TEST ----
+p_value: 0.5340790624774985
+Pasa la prueba de rachas.
+---------------------------------------
+---------------------------------------------------------
+--------------------SEED: 7826 ----------------------------
+---------------------------------------------------------
+---- CHI SQUARE TEST ----
+CRITICAL VALUE:  123.2252214533618
+CHI SQUARE STAT:  117.95999999999998
+Pasa la prueba de Chi-cuadrado.
+---------------------------------------
+---- FRECUENCY MONOBIT TEST ----
+p_value: 1.562139209909684e-51
+No pasa la prueba de frecuencia monobit.
+---------------------------------------
+---- LONGEST ONES SECUENCY TEST ----
+P_VALUE: 0.6175844002899062
+SI Pasa la prueba Test de Cantidad de Unos por Bloque
+---------------------------------------
+None
+---- RUNS TEST ----
+p_value: 0.011055740616012447
+Pasa la prueba de rachas.
+---------------------------------------

@@ -1,0 +1,99 @@
+///////////////// n=10 ///////////////
+
+---- CHI SQUARE TEST ----
+CRITICAL VALUE:  5.991464547107979  
+CHI SQUARE STAT:  1.4000000000000001
+Pasa la prueba de Chi-cuadrado.     
+---------------------------------------
+---- FRECUENCY MONOBIT TEST ----
+p_value: 0.6547208460185772
+Pasa la prueba de frecuencia monobit.
+---------------------------------------
+---- LONGEST ONES SECUENCY TEST ----
+No hay suficientes tados para realizar el test segun NEST
+---- RUNS TEST ----
+p_value: 0.801937072993282
+Pasa la prueba de rachas.
+
+///////////////// n=100 ///////////////
+
+---------------------------------------
+---- CHI SQUARE TEST ----
+CRITICAL VALUE:  16.918977604620448
+CHI SQUARE STAT:  12.600000000000001
+Pasa la prueba de Chi-cuadrado.
+---------------------------------------
+---- FRECUENCY MONOBIT TEST ----
+p_value: 0.16901868222154104
+Pasa la prueba de frecuencia monobit.
+---------------------------------------
+---- LONGEST ONES SECUENCY TEST ----
+P_VALUE: 0.7785479606891796
+SI Pasa la prueba Test de Cantidad de Unos por Bloque
+---------------------------------------
+None
+---- RUNS TEST ----
+p_value: 0.8657354715082565
+Pasa la prueba de rachas.
+
+///////////////// n=1000 ///////////////
+---------------------------------------
+---- CHI SQUARE TEST ----
+CRITICAL VALUE:  43.77297182574219
+CHI SQUARE STAT:  24.364000000000004
+Pasa la prueba de Chi-cuadrado.
+---------------------------------------
+---- FRECUENCY MONOBIT TEST ----
+p_value: 0.00014236408219789426
+No pasa la prueba de frecuencia monobit.
+---------------------------------------
+---- LONGEST ONES SECUENCY TEST ----
+P_VALUE: 0.29652468494440243
+SI Pasa la prueba Test de Cantidad de Unos por Bloque
+---------------------------------------
+None
+---- RUNS TEST ----
+p_value: 0.9674709319047724
+Pasa la prueba de rachas.
+
+///////////////// n=10000 ///////////////
+
+---------------------------------------
+---- CHI SQUARE TEST ----
+CRITICAL VALUE:  123.2252214533618
+CHI SQUARE STAT:  106.16000000000001
+Pasa la prueba de Chi-cuadrado.
+---------------------------------------
+---- FRECUENCY MONOBIT TEST ----
+p_value: 4.1484953310999705e-54
+No pasa la prueba de frecuencia monobit.
+---------------------------------------
+---- LONGEST ONES SECUENCY TEST ----
+P_VALUE: 0.5321516950582101
+SI Pasa la prueba Test de Cantidad de Unos por Bloque
+---------------------------------------
+None
+---- RUNS TEST ----
+p_value: 0.8265943859738409
+Pasa la prueba de rachas.
+
+///////////////// n=100000 ///////////////
+---------------------------------------
+---- CHI SQUARE TEST ----
+CRITICAL VALUE:  357.39088036782084    
+CHI SQUARE STAT:  357.2771200000002    
+Pasa la prueba de Chi-cuadrado.        
+---------------------------------------
+---- FRECUENCY MONOBIT TEST ----
+p_value: 0.0
+No pasa la prueba de frecuencia monobit.
+---------------------------------------
+---- LONGEST ONES SECUENCY TEST ----
+P_VALUE: 0.006043433025032168
+NO pasa la prueba Test de Cantidad de Unos por Bloque
+---------------------------------------
+None
+---- RUNS TEST ----
+p_value: 0.005508189888903288
+No pasa la prueba de rachas.
+---------------------------------------

@@ -114,7 +114,6 @@ h=GCL_generator(6876,22695477,(2**32),1,10000)
 histogram(h)
 plot_scatter(h, color=(0, 0, 0), alpha=0.5, title='Scatter plot - Generador GCL', xlabel='x', ylabel='y')
 
-print('Chi Test Middle Square=')
 chi_square_test(h, 0.95)
 
 bits_array = generator_to_tests(h)

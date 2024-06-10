@@ -7,6 +7,7 @@ from scipy.special import gammaincc
 
 #frequency_monobit_test
 def frequency_monobit_test(bit_sequence: str):
+    print('---- FRECUENCY MONOBIT TEST ----')
     n = len(bit_sequence)
     s = sum([1 if bit == '1' else -1 for bit in bit_sequence])
     s_obs = s / sqrt(n)
@@ -16,9 +17,12 @@ def frequency_monobit_test(bit_sequence: str):
         print("Pasa la prueba de frecuencia monobit.")
     else:
         print("No pasa la prueba de frecuencia monobit.")
+    print('---------------------------------------')
+
 
 #runs_test
 def runs_test(bit_sequence: str):
+    print('---- RUNS TEST ----')
     n = len(bit_sequence)
     pi = bit_sequence.count('1') / n
     V_n_obs = 1 + sum(bit_sequence[i] != bit_sequence[i + 1] for i in range(n - 1))
@@ -30,6 +34,7 @@ def runs_test(bit_sequence: str):
         print("Pasa la prueba de rachas.")
     else:
         print("No pasa la prueba de rachas.")
+    print('---------------------------------------')
 
 
 
@@ -45,6 +50,7 @@ def number_to_bits(number):
 
 #longest_run_test
 def longest_run_test(bit_sequence):
+    print('---- LONGEST ONES SECUENCY TEST ----')
     h = []
     for b in bit_sequence: h.append(int(b))
 
@@ -98,7 +104,7 @@ def longest_run_test(bit_sequence):
 
   
     p_value= gammaincc((k/2),(chi_square/2))
-    #print('P_VALUE:' , p_value)
+    print('P_VALUE:' , p_value)
     #print ('CHI_SQ:', chi_square)
     #print('Cant Bloques:',n)
     #print('M: ', m)
@@ -109,10 +115,12 @@ def longest_run_test(bit_sequence):
         print("NO pasa la prueba Test de Cantidad de Unos por Bloque")
     else: 
         print( "SI Pasa la prueba Test de Cantidad de Unos por Bloque" )
+    print('---------------------------------------')
 
 
 #chi_square_test
 def chi_square_test(decimal_sequence, confidence_level):
+    print('---- CHI SQUARE TEST ----')
     n = len(decimal_sequence)
     m = int(sqrt(n))
 
@@ -125,11 +133,14 @@ def chi_square_test(decimal_sequence, confidence_level):
     chi_square_stat = sum((observed_frequencies - expected_frequency) ** 2 / expected_frequency)
     degrees_of_freedom = m - 1
     critical_value = chi2.ppf(confidence_level, degrees_of_freedom)
-
+    print('CRITICAL VALUE: ', critical_value)
+    print('CHI SQUARE STAT: ', chi_square_stat)
     if chi_square_stat < critical_value:
         print("Pasa la prueba de Chi-cuadrado. ") #No se puede afirmar que no sigue una distribucion uniforme
     else:
         print("NO pasa la prueba de Chi-cuadrado.")
+    print('---------------------------------------')
+
 
 
 def generator_to_tests(numbers_generated):
