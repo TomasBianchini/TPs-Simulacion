@@ -51,6 +51,13 @@ def uniforme(numbers, a, b) -> list:
                 num.append(t)
                 break
     return num
+#UNIFORME INVERSA
+def transformada_inversa_uniforme(a, b, x):
+    array = []
+    for i in x:
+        array.append((i-a)/(b-a))
+    return array
+
     
 def mainUniforme():
     n = 1000
@@ -69,6 +76,17 @@ def mainUniforme():
     plt.ylabel("Densidad de ocurrencias")
     plt.xlabel("Valor de la variable")
     plt.title('Histograma de una VA con distribucion Uniforme-Aceptacion y rechazo')
+    plt.show()
+    runtestUDM(num, 0.025)
+    # Histograma de densidades de x aceptadas por el metodo de inversa
+    plt.hist(num, density=True, bins='auto', histtype='stepfilled', color='steelblue')
+    plt.axhline(y=1/(b-a), color='red', linestyle='-', linewidth=2, label=f'Densidad 1/({b}-{a})')
+
+    num = transformada_inversa_uniforme( a, b, numbers)
+    
+    plt.ylabel("Densidad de ocurrencias")
+    plt.xlabel("Valor de la variable")
+    plt.title('Histograma de una VA con distribucion Uniforme-Inversa')
     plt.show()
     runtestUDM(num, 0.025)
 
@@ -98,6 +116,12 @@ def exponencialr(numeros, lam, n) -> list:
             exponencial.append(T)
             cont += 1
     return exponencial
+#EXPONENCIAL INVERSA
+def ExponencialInversa(numeros, lam) -> list:
+    array = []
+    for x in numeros:
+        array.append(-log(1 - x) / lam)
+    return array
 
 def mainExp():
     numero = [random.uniform(0, 1) for i in range(n)]
@@ -114,6 +138,22 @@ def mainExp():
     plt.ylabel("Densidad de ocurrencias")
     plt.xlabel("Valor de la variable")
     plt.title('Histograma de una VA con distribucion Exponencial-Aceptacion y rechazo')
+    plt.show()
+    runtestUDM(num, 0.025)
+
+    # Histograma de densidades de x aceptadas por el metodo de inversa
+    
+    # Definir funcion de densidad y graficar para comparar
+    x = np.linspace(expon.ppf(0.0001, scale=1 / lam), expon.ppf(0.999, scale=1 / lam), 100)
+    fig, ax = plt.subplots(1, 1)
+    ax.plot(x, expon.pdf(x, scale=1 / lam), 'r-', lw=2, alpha=0.6, label='exponencial ')
+    ax.legend(loc='best', frameon=False)
+    numero = [random.uniform(0, 1) for i in range(n)]
+    num = ExponencialInversa(numero, lam)
+    plt.hist(num, density=True, bins='auto', histtype='stepfilled', color='steelblue')
+    plt.ylabel("Densidad de ocurrencias")
+    plt.xlabel("Valor de la variable")
+    plt.title('Histograma de una VA con distribucion Exponencial-Inversa')
     plt.show()
     runtestUDM(num, 0.025)
 
@@ -187,13 +227,33 @@ def NormalR(numeros, mu, des) -> list:
                 break
     return num
 
-distNormal = np.random.uniform(0, 1, n)
-distNormal = NormalR(distNormal, mu, des)
+#NORMAL INVERSA
+def NormalInversa(numeros, mu, sigma) -> list:
+    return [mu + sqrt(2) * sigma * erfinv(2 * r - 1) for r in numeros]
+
+distUni = np.random.uniform(0, 1, n)
+distNormal = NormalR(distUni, mu, des)
 xn, yn = normalLine(mu, des)
 normal_list = np.random.normal(mu, des, n)
 plt.plot(xn, yn, color='red', label='distribucion normal')
 plt.hist(distNormal, bins=round(sqrt(len(distNormal))), edgecolor='black', density=True, color='steelblue')
 plt.title('Histograma de una VA con distribucion Normal-Aceptacion y rechazo')
+plt.xlabel('Valor de la variable')
+plt.ylabel('Ocurrencias')
+plt.legend(loc='best', frameon=False)
+plt.show()
+runtestUDM(distNormal, 0.025)
+
+#NORMAL INVERSA
+n = 1000
+mu, des = 2, .5
+distUni = np.random.uniform(0, 1, n)
+distNormal = NormalInversa(distUni, mu, des)
+xn, yn = normalLine(mu, des)
+normal_list = np.random.normal(mu, des, n)
+plt.plot(xn, yn, color='red', label='distribucion normal')
+plt.hist(distNormal, bins=round(sqrt(len(distNormal))), edgecolor='black', density=True, color='steelblue')
+plt.title('Histograma de una VA con distribucion Normal-Inversa')
 plt.xlabel('Valor de la variable')
 plt.ylabel('Ocurrencias')
 plt.legend(loc='best', frameon=False)
@@ -395,80 +455,43 @@ runtestUDM(distPoisson, 0.025)
 
 # Empirica 
 
-cant = 1000
+# cant = 1000
 
 
-def randEmpirica(numeros, min_x, lista_fr) -> list:
-    n = len(lista_fr)
-    a, b = min_x, min_x + n
-    frec_rel = dict()
+# def randEmpirica(numeros, min_x, lista_fr) -> list:
+#     n = len(lista_fr)
+#     a, b = min_x, min_x + n
+#     frec_rel = dict()
 
-    max = __builtins__.max
-    M = max(lista_fr)
+#     max = __builtins__.max
+#     M = max(lista_fr)
 
-    empiric = []
-    for i in range(a, b):
-        frec_rel.setdefault(i, lista_fr.pop(0))
-    for U in numeros:
-        while True:
-            V = np.random.uniform(0, 1)
-            T = trunc(a + (b - a) * V)
-            if T not in frec_rel.keys():
-                break
-            if (M * U <= frec_rel[T]):
-                empiric.append(T)
-                break
-    return empiric
-
-
-pseudo = [np.random.uniform(0, 1) for _ in range(cant)]
-lista = [0.092, 0.023, 0.168, 0.017, 0.014, 0.245, 0.019, 0.213, 0.114,
-         0.085]  # numeros para probar, la suma de probabilidades debe ser igual a 1
-plt.plot(lista, color='red')
-R = randEmpirica(pseudo, 0, lista)
-plt.hist(R, density=True, bins=10)
-plt.ylabel("Densidad de ocurrencias")
-plt.xlabel("Valor de la variable")
-plt.title('Histograma de una VA con distribucion Empirica-Aceptacion y rechazo')
-plt.show()
-
-print(mean(R))
-
-runtestUDM(R, 0.025)
+#     empiric = []
+#     for i in range(a, b):
+#         frec_rel.setdefault(i, lista_fr.pop(0))
+#     for U in numeros:
+#         while True:
+#             V = np.random.uniform(0, 1)
+#             T = trunc(a + (b - a) * V)
+#             if T not in frec_rel.keys():
+#                 break
+#             if (M * U <= frec_rel[T]):
+#                 empiric.append(T)
+#                 break
+#     return empiric
 
 
+# pseudo = [np.random.uniform(0, 1) for _ in range(cant)]
+# lista = [0.092, 0.023, 0.168, 0.017, 0.014, 0.245, 0.019, 0.213, 0.114,
+#          0.085]  # numeros para probar, la suma de probabilidades debe ser igual a 1
+# plt.plot(lista, color='red')
+# R = randEmpirica(pseudo, 0, lista)
+# plt.hist(R, density=True, bins=10)
+# plt.ylabel("Densidad de ocurrencias")
+# plt.xlabel("Valor de la variable")
+# plt.title('Histograma de una VA con distribucion Empirica-Aceptacion y rechazo')
+# plt.show()
 
+# print(mean(R))
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#UNIFORME INVERSA
-def transformada_inversa_uniforme(a, b, x):
-    array = []
-    for i in x:
-        array.append((i-a)/(b-a))
-    return array
-
-#NORMAL INVERSA
-def NormalInversa(numeros, mu, sigma) -> list:
-    return [mu + sqrt(2) * sigma * erfinv(2 * r - 1) for r in numeros]
-
-#EXPONENCIAL INVERSA
-def ExponencialInversa(numeros, lam) -> list:
-    array = []
-    for x in numeros:
-        array.append(-log(1 - x) / lam)
-    return array
+# runtestUDM(R, 0.025)
