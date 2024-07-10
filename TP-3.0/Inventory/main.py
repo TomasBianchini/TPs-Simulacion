@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import matplotlib.pyplot as plt
 
 # Integer variables
 amount = 0 
@@ -123,21 +124,21 @@ def report():
     avg_holding_cost = holding_cost * area_holding / num_months
     avg_shortage_cost = shortage_cost * area_shortage / num_months
     avg_ordering_cost = total_ordering_cost / num_months
-    # # Suma el acumulado total
-    # final_tot += avg_holding_cost + avg_shortage_cost + avg_ordering_cost
-    # final_holding += avg_holding_cost
-    # final_shortage += avg_shortage_cost
-    # final_ordering += avg_ordering_cost
+    # Suma el acumulado total
+    final_tot += avg_holding_cost + avg_shortage_cost + avg_ordering_cost
+    final_holding += avg_holding_cost
+    final_shortage += avg_shortage_cost
+    final_ordering += avg_ordering_cost
 
-    # tot_per_pol.append(avg_holding_cost + avg_shortage_cost + avg_ordering_cost)
-    # ord_per_pol.append(avg_ordering_cost)
-    # hold_per_pol.append(avg_holding_cost)
-    # short_per_pol.append(avg_shortage_cost)
+    tot_per_pol.append(avg_holding_cost + avg_shortage_cost + avg_ordering_cost)
+    ord_per_pol.append(avg_ordering_cost)
+    hold_per_pol.append(avg_holding_cost)
+    short_per_pol.append(avg_shortage_cost)
 
-    # total_costs.append(avg_holding_cost + avg_shortage_cost + avg_ordering_cost)
-    # ordering_costs.append(avg_ordering_cost)
-    # holding_costs.append(avg_holding_cost)
-    # shortage_costs.append(avg_shortage_cost)
+    total_costs.append(avg_holding_cost + avg_shortage_cost + avg_ordering_cost)
+    ordering_costs.append(avg_ordering_cost)
+    holding_costs.append(avg_holding_cost)
+    shortage_costs.append(avg_shortage_cost)
 
     print("\n\n({}, {}){:>15.2f}{:>15.2f}{:>15.2f}{:>15.2f}".format(
         smalls, bigs, avg_ordering_cost + avg_holding_cost + avg_shortage_cost,
@@ -159,8 +160,65 @@ def update_time_avg_status():
     elif inv_level > 0:
         area_holding += inv_level * time_since_last_event
 
+def cost_graphs(total_costs, ordering_costs, holding_costs, shortage_costs, smallsArray, bigsArray):
+    
+    policies = []
+
+    for small, big in zip(smallsArray, bigsArray):
+        policy = f"Policy: {small}-{big}"
+        policies.append(policy)
+        policies = [...]
+
+    # Configuración de la gráfica de barras
+    x = range(len(policies))
+    width = 0.2              # Ancho de las barras
+
+    # Creación de la figura y los ejes
+    fig, ax = plt.subplots()
+
+    # Creación de las barras para cada tipo de costo
+    bar1 = ax.bar(x, total_costs, width, label='Total Cost')
+    bar2 = ax.bar([i + width for i in x], ordering_costs, width, label='Ordering Cost')
+    bar3 = ax.bar([i + 2*width for i in x], holding_costs, width, label='Holding Cost')
+    bar4 = ax.bar([i + 3*width for i in x], shortage_costs, width, label='Shortage Cost')
+
+    # Etiquetas de los ejes y título de la gráfica
+    ax.set_xlabel('Tipo de costo')
+    ax.set_ylabel('Valor')
+    ax.set_title('Costos finales')
+    ax.set_xticks([i + 1.5*width for i in x])
+    ax.set_xticklabels(policies)
+
+    # Leyenda de la gráfica
+    ax.legend()
+    # Mostrar la gráfica
+    plt.show()
+
+def cost_pie_chart(ordering_costs, holding_costs, shortage_costs, smallsArray, bigsArray):
+    
+    policies = []
+
+    for small, big in zip(smallsArray, bigsArray):
+        policy = f"Policy: {small}-{big}"
+        policies.append(policy)
+        policies = [...]
+
+    # Creación de la figura y los ejes
+    fig, ax = plt.subplots()
+
+    # Creación del gráfico de torta
+    labels = ['Ordering Cost', 'Holding Cost', 'Shortage Cost']
+    sizes = [ordering_costs, holding_costs, shortage_costs]
+    ax.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
+
+    # Título de la gráfica
+    ax.set_title('Costos finales')
+
+    # Mostrar la gráfica
+    plt.show()
+
 def main():
-    global k, prob_distrib_demand, num_events, num_policies, smalls, bigs, num_months, num_values_demand, mean_interdemand, setup_cost, incremental_cost, holding_cost, shortage_cost, minlag, maxlag
+    global k, prob_distrib_demand, num_events, num_policies, smalls, bigs, num_months, num_values_demand, mean_interdemand, setup_cost, incremental_cost, holding_cost, shortage_cost, minlag, maxlag, smallsArray, bigsArray
     global total_costs, ordering_costs, holding_costs, shortage_costs
     # Ingreso de los parámetros de entrada
     # initial_inv_level = float(input("Ingrese el valor de initial_inv_level: "))
@@ -181,34 +239,43 @@ def main():
     print(num_months)
 
     # Parámetros de "smalls" y "bigs" del libro
-    smalls = 20
-    bigs = 40    
     num_events = 4
+    k = 0
+    smallsArray = [20, 20, 20, 20, 40, 40, 40, 60, 60]
+    bigsArray = [40, 60, 80, 100, 60, 80, 100, 80, 100]
+
 
 
     prob_distrib_demand = [0.0] * (int(num_values_demand) + 1)
     for i in range(1, int(num_values_demand) + 1):
         prob_distrib_demand[i] = float(input("Ingrese el valor de prob_distrib_demand en {}: ".format(i))) # Se ingresan las probabilidades de que la demanda sea de i unidades
+    # Corre la simulación variando la política de inventario
+    for i in range(1, int(num_policies) + 1):
 
-    initailize()
+        # Lee la política de inventario e inicializa la simulación
+        smalls = smallsArray[k]
+        bigs = bigsArray[k]
+        initailize()
 
-    while(next_event_type != 3):
-        timing()
-        update_time_avg_status()
-        if(next_event_type == 1):
-            orden_arrival()
-        elif(next_event_type == 2):           
-            demand()
-        elif(next_event_type == 4):
-            evaluate()
-        else:
-            report()
+        while(next_event_type != 3):
+            timing()
+            update_time_avg_status()
+            if(next_event_type == 1):
+                orden_arrival()
+            elif(next_event_type == 2):           
+                demand()
+            elif(next_event_type == 4):
+                evaluate()
+            else:
+                report()
+        k += 1
     
     print("\n\n" + "\033[4m" + "Final costs" + "\033[0m")
     print("Total cost:", round(final_tot, 2))
     print("Ordering cost:", round(final_ordering, 2))
     print("Holding cost:", round(final_holding, 2))
     print("Shortage cost:", round(final_shortage, 2))
-
+    cost_graphs(final_tot, final_ordering, final_holding, final_shortage, smallsArray, bigsArray)
+    cost_pie_chart(final_ordering, final_holding, final_shortage, smallsArray, bigsArray)
 
 main()

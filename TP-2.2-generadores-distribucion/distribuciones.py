@@ -455,43 +455,43 @@ runtestUDM(distPoisson, 0.025)
 
 # Empirica 
 
-# cant = 1000
+cant = 1000
 
 
-# def randEmpirica(numeros, min_x, lista_fr) -> list:
-#     n = len(lista_fr)
-#     a, b = min_x, min_x + n
-#     frec_rel = dict()
+def randEmpirica(numeros, min_x, lista_fr) -> list:
+    n = len(lista_fr)
+    a, b = min_x, min_x + n
+    frec_rel = dict()
 
-#     max = __builtins__.max
-#     M = max(lista_fr)
+    max = __builtins__.max
+    M = max(lista_fr)
 
-#     empiric = []
-#     for i in range(a, b):
-#         frec_rel.setdefault(i, lista_fr.pop(0))
-#     for U in numeros:
-#         while True:
-#             V = np.random.uniform(0, 1)
-#             T = trunc(a + (b - a) * V)
-#             if T not in frec_rel.keys():
-#                 break
-#             if (M * U <= frec_rel[T]):
-#                 empiric.append(T)
-#                 break
-#     return empiric
+    empiric = []
+    for i in range(a, b):
+        frec_rel.setdefault(i, lista_fr.pop(0))
+    for U in numeros:
+        while True:
+            V = np.random.uniform(0, 1)
+            T = trunc(a + (b - a) * V)
+            if T not in frec_rel.keys():
+                break
+            if (M * U <= frec_rel[T]):
+                empiric.append(T)
+                break
+    return empiric
 
 
-# pseudo = [np.random.uniform(0, 1) for _ in range(cant)]
-# lista = [0.092, 0.023, 0.168, 0.017, 0.014, 0.245, 0.019, 0.213, 0.114,
-#          0.085]  # numeros para probar, la suma de probabilidades debe ser igual a 1
-# plt.plot(lista, color='red')
-# R = randEmpirica(pseudo, 0, lista)
-# plt.hist(R, density=True, bins=10)
-# plt.ylabel("Densidad de ocurrencias")
-# plt.xlabel("Valor de la variable")
-# plt.title('Histograma de una VA con distribucion Empirica-Aceptacion y rechazo')
-# plt.show()
+pseudo = [np.random.uniform(0, 1) for _ in range(cant)]
+lista = [0.092, 0.023, 0.168, 0.017, 0.014, 0.245, 0.019, 0.213, 0.114,
+          0.085]  # numeros para probar, la suma de probabilidades debe ser igual a 1
+plt.plot(lista, color='red')
+R = randEmpirica(pseudo, 0, lista)
+plt.hist(R, density=True, bins=10)
+plt.ylabel("Densidad de ocurrencias")
+plt.xlabel("Valor de la variable")
+plt.title('Histograma de una VA con distribucion Empirica-Aceptacion y rechazo')
+plt.show()
 
-# print(mean(R))
+print(mean(R))
 
-# runtestUDM(R, 0.025)
+runtestUDM(R, 0.025)
