@@ -134,7 +134,7 @@ def report():
     ord_per_pol.append(avg_ordering_cost)
     hold_per_pol.append(avg_holding_cost)
     short_per_pol.append(avg_shortage_cost)
-
+    #TODO me parece que estas 4 variables son iguales a las de arriba 
     total_costs.append(avg_holding_cost + avg_shortage_cost + avg_ordering_cost)
     ordering_costs.append(avg_ordering_cost)
     holding_costs.append(avg_holding_cost)
@@ -217,6 +217,136 @@ def cost_pie_chart(ordering_costs, holding_costs, shortage_costs, smallsArray, b
     # Mostrar la gráfica
     plt.show()
 
+def cost_per_policy_graphs(tot_per_pol, ord_per_pol, hold_per_pol, short_per_pol, smallsArray, bigsArray):
+    """
+    Crea una gráfica de barras que muestra el desglose de costos por políticas de inventario.
+
+    :param tot_per_pol: Lista de costos totales por política.
+    :param ord_per_pol: Lista de costos de pedido por política.
+    :param hold_per_pol: Lista de costos de mantenimiento por política.
+    :param short_per_pol: Lista de costos de escasez por política.
+    :param smallsArray: Lista de valores 'small' para cada política.
+    :param bigsArray: Lista de valores 'big' para cada política.
+    """
+  
+    # Crear etiquetas de políticas
+    policies = [f"Policy: {small}-{big}" for small, big in zip(smallsArray, bigsArray)]
+
+    # Configuración de la gráfica de barras
+    x = np.arange(len(policies))
+    width = 0.2  # Ancho de las barras
+
+    # Creación de la figura y los ejes
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    # Creación de las barras para cada tipo de costo
+    bar1 = ax.bar(x - 1.5*width, tot_per_pol, width, label='Total Cost', color='b')
+    bar2 = ax.bar(x - 0.5*width, ord_per_pol, width, label='Ordering Cost', color='g')
+    bar3 = ax.bar(x + 0.5*width, hold_per_pol, width, label='Holding Cost', color='r')
+    bar4 = ax.bar(x + 1.5*width, short_per_pol, width, label='Shortage Cost', color='c')
+
+    # Etiquetas de los ejes y título de la gráfica
+    ax.set_xlabel('Políticas de Inventario', fontsize=12)
+    ax.set_ylabel('Valor', fontsize=12)
+    ax.set_title('Desglose de Costos por Política de Inventario', fontsize=14)
+    ax.set_xticks(x)
+    ax.set_xticklabels(policies, rotation=45, ha='right')
+
+    # Leyenda de la gráfica
+    ax.legend()
+
+    # Ajuste de diseño
+    fig.tight_layout()
+
+    # Mostrar la gráfica
+    plt.show()
+
+def time_cost_graphs(months, total_costs, ordering_costs, holding_costs, shortage_costs):
+    """
+    Crea una gráfica de líneas que muestra la variación de costos a lo largo del tiempo.
+
+    :param months: Número de meses.
+    :param total_costs: Lista de costos totales por mes.
+    :param ordering_costs: Lista de costos de pedido por mes.
+    :param holding_costs: Lista de costos de mantenimiento por mes.
+    :param shortage_costs: Lista de costos de escasez por mes.
+    """
+    
+    # Crear el rango de meses
+    x = np.arange(1, months + 1)
+
+    # Configuración de la gráfica
+    plt.figure(figsize=(10, 6))
+    plt.plot(x, total_costs, marker='o', linestyle='-', label='Total Costs', color='b')
+    plt.plot(x, ordering_costs, marker='s', linestyle='--', label='Ordering Costs', color='g')
+    plt.plot(x, holding_costs, marker='^', linestyle='--', label='Holding Costs', color='r')
+    plt.plot(x, shortage_costs, marker='d', linestyle='--', label='Shortage Costs', color='c')
+
+    # Etiquetas de los ejes y título de la gráfica
+    plt.xlabel('Meses', fontsize=12)
+    plt.ylabel('Valor', fontsize=12)
+    plt.title('Variación de Costos a lo Largo del Tiempo', fontsize=14)
+
+    # Leyenda de la gráfica
+    plt.legend()
+
+    # Ajuste de diseño
+    plt.tight_layout()
+
+    # Mostrar la gráfica
+    plt.show()
+def cost_per_policy_graphs1(tot_per_pol, ord_per_pol, hold_per_pol, short_per_pol, smallsArray, bigsArray):
+    policies = []
+
+    for small, big in zip(smallsArray, bigsArray):
+        policy = f"Policy: {small}-{big}"
+        policies.append(policy)
+
+    # Configuración de la gráfica de barras
+    x = range(len(policies))
+    width = 0.2              # Ancho de las barras
+
+    # Creación de la figura y los ejes
+    fig, ax = plt.subplots()
+
+    # Creación de las barras para cada tipo de costo
+    bar1 = ax.bar(x, tot_per_pol, width, label='Total Cost')
+    bar2 = ax.bar([i + width for i in x], ord_per_pol, width, label='Ordering Cost')
+    bar3 = ax.bar([i + 2*width for i in x], hold_per_pol, width, label='Holding Cost')
+    bar4 = ax.bar([i + 3*width for i in x], short_per_pol, width, label='Shortage Cost')
+
+    # Etiquetas de los ejes y título de la gráfica
+    ax.set_xlabel('Políticas de inventario')
+    ax.set_ylabel('Valor')
+    ax.set_title('Desgloce de costos por política de inventario')
+    ax.set_xticks([i + 1.5*width for i in x])
+    ax.set_xticklabels(policies)
+
+    # Leyenda de la gráfica
+    ax.legend()
+
+    # Mostrar la gráfica
+    plt.show()
+
+def time_cost_graphs1(months, total_costs, ordering_costs, holding_costs, shortage_costs):
+    
+    plt.figure(figsize=(10, 6))
+    plt.plot(range(1, months+1), total_costs, marker='o', linestyle='-', label='Total Costs')
+    plt.plot(range(1, months+1), ordering_costs, marker='s', linestyle='--', label='Ordering Costs')
+    plt.plot(range(1, months+1), holding_costs, marker='^', linestyle='--', label='Holding Costs')
+    plt.plot(range(1, months+1), shortage_costs, marker='d', linestyle='--', label='Shortage Costs')
+
+    plt.xlabel('Meses')
+    plt.ylabel('Valor')
+    plt.title('Variación de costos a lo largo del tiempo')
+    plt.legend()
+
+    # ValueError: x and y must have same first dimension, but have shapes (8,) and (9,)
+
+    # Mostrar la gráfica
+    plt.show()
+
+
 def main():
     global k, prob_distrib_demand, num_events, num_policies, smalls, bigs, num_months, num_values_demand, mean_interdemand, setup_cost, incremental_cost, holding_cost, shortage_cost, minlag, maxlag, smallsArray, bigsArray
     global total_costs, ordering_costs, holding_costs, shortage_costs
@@ -277,5 +407,13 @@ def main():
     print("Shortage cost:", round(final_shortage, 2))
     cost_graphs(final_tot, final_ordering, final_holding, final_shortage, smallsArray, bigsArray)
     cost_pie_chart(final_ordering, final_holding, final_shortage, smallsArray, bigsArray)
-
+    cost_per_policy_graphs(tot_per_pol, ord_per_pol, hold_per_pol, short_per_pol, smallsArray, bigsArray) 
+    cost_per_policy_graphs1(tot_per_pol, ord_per_pol, hold_per_pol, short_per_pol, smallsArray, bigsArray)  
+      
+    ordering_costs=np.full(9, ordering_costs)
+    holding_costs=np.full(9, holding_costs)
+    shortage_costs=np.full(9, shortage_costs)
+    total_costs=np.full(9, total_costs)  
+    time_cost_graphs1(num_months, total_costs, ordering_costs, holding_costs, shortage_costs) 
+    time_cost_graphs(num_months, total_costs, ordering_costs, holding_costs, shortage_costs)    
 main()
