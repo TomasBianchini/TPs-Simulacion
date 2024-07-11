@@ -149,7 +149,8 @@ def report():
     ordering_costs.append(avg_ordering_cost)
     holding_costs.append(avg_holding_cost)
     shortage_costs.append(avg_shortage_cost)
-
+    print("\n\n{:<15}{:<15}{:<15}{:<15}{:<15}".format(
+        "Min/Max Inv", "Total Cost", "Order Cost", "Hold Cost", "Short Cost"))
     print("\n\n({}, {}){:>15.2f}{:>15.2f}{:>15.2f}{:>15.2f}".format(
         min_inventory, max_inventory, avg_ordering_cost + avg_holding_cost + avg_shortage_cost,
         avg_ordering_cost, avg_holding_cost, avg_shortage_cost))
@@ -324,8 +325,6 @@ def main():
 
     # Valores de ejemplo del libro:
     initial_inv_level, num_months, num_policies, num_values_demand, mean_interdemand, setup_cost, incremental_cost, holding_cost, shortage_cost, minlag, maxlag = 60, 9, 9, 4, 0.10, 32, 3, 1, 5, 0.5, 1
-
-    print(num_months)
 
     # Parámetros de "min_inventory" y "max_inventory" del libro
     num_events = 4
