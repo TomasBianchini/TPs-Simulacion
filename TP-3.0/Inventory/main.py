@@ -4,14 +4,14 @@ import matplotlib.pyplot as plt
 
 # Integer variables
 amount = 0 
-bigs = 0
+max_inventory = 0
 initial_inv_level = 0
 inv_level = 0
 next_event_type = 0
 num_events = 0
 num_months = 0
 num_values_demand = 0
-smalls = 0
+min_inventory = 0
 # Float variables
 area_holding = 0.0
 area_shortage = 0.0
@@ -72,7 +72,7 @@ def timing():
     #     print("Event list empty at time {}".format(sim_time))
     #     exit(1)
     sim_time = min_time_next_event
-
+    
 
 def initailize():
     global sim_time, inv_level, time_last_event, total_ordering_cost, area_holding, area_shortage, time_next_event
@@ -110,10 +110,10 @@ def demand():
     time_next_event[2] = sim_time + expon(mean_interdemand)
 
 def evaluate():
-    global inv_level, amount, total_ordering_cost, time_next_event, sim_time, smalls, bigs, setup_cost, incremental_cost, minlag, maxlag
+    global inv_level, amount, total_ordering_cost, time_next_event, sim_time, min_inventory, max_inventory, setup_cost, incremental_cost, minlag, maxlag
     global area_holding, area_shortage, num_months, holding_cost, shortage_cost
-    if inv_level < smalls: 
-        amount = bigs - inv_level
+    if inv_level < min_inventory: 
+        amount = max_inventory - inv_level
         total_ordering_cost += setup_cost + amount * incremental_cost
         
         time_next_event[1] = sim_time + uniform(minlag, maxlag)
@@ -131,7 +131,7 @@ def evaluate():
     time_next_event[4] = sim_time + 1.0 # Programa el evento de evaluación
 
 def report():
-    global area_holding, area_shortage, total_ordering_cost, num_months, smalls, bigs, holding_cost, shortage_cost
+    global area_holding, area_shortage, total_ordering_cost, num_months, min_inventory, max_inventory, holding_cost, shortage_cost
     global final_tot, final_holding, final_shortage, final_ordering
     global total_costs, ordering_costs, holding_costs, shortage_costs
     global tot_per_pol, ord_per_pol, hold_per_pol, short_per_pol
@@ -151,7 +151,7 @@ def report():
     shortage_costs.append(avg_shortage_cost)
 
     print("\n\n({}, {}){:>15.2f}{:>15.2f}{:>15.2f}{:>15.2f}".format(
-        smalls, bigs, avg_ordering_cost + avg_holding_cost + avg_shortage_cost,
+        min_inventory, max_inventory, avg_ordering_cost + avg_holding_cost + avg_shortage_cost,
         avg_ordering_cost, avg_holding_cost, avg_shortage_cost))
 
 
@@ -170,11 +170,11 @@ def update_time_avg_status():
     elif inv_level > 0:
         area_holding += inv_level * time_since_last_event
 
-def cost_graphs(total_costs, ordering_costs, holding_costs, shortage_costs, smallsArray, bigsArray):
+def cost_graphs(total_costs, ordering_costs, holding_costs, shortage_costs, min_inventories, max_inventories):
     
     policies = []
 
-    for small, big in zip(smallsArray, bigsArray):
+    for small, big in zip(min_inventories, max_inventories):
         policy = f"Policy: {small}-{big}"
         policies.append(policy)
         policies = [...]
@@ -204,11 +204,11 @@ def cost_graphs(total_costs, ordering_costs, holding_costs, shortage_costs, smal
     # Mostrar la gráfica
     plt.show()
 
-def cost_pie_chart(ordering_costs, holding_costs, shortage_costs, smallsArray, bigsArray):
+def cost_pie_chart(ordering_costs, holding_costs, shortage_costs, min_inventories, max_inventories):
     
     policies = []
 
-    for small, big in zip(smallsArray, bigsArray):
+    for small, big in zip(min_inventories, max_inventories):
         policy = f"Policy: {small}-{big}"
         policies.append(policy)
         policies = [...]
@@ -227,20 +227,19 @@ def cost_pie_chart(ordering_costs, holding_costs, shortage_costs, smallsArray, b
     # Mostrar la gráfica
     plt.show()
 
-def cost_per_policy_graphs(tot_per_pol, ord_per_pol, hold_per_pol, short_per_pol, smallsArray, bigsArray):
+def cost_per_policy_graphs(tot_per_pol, ord_per_pol, hold_per_pol, short_per_pol, min_inventories, max_inventories):
     """
     Crea una gráfica de barras que muestra el desglose de costos por políticas de inventario.
-
     :param tot_per_pol: Lista de costos totales por política.
     :param ord_per_pol: Lista de costos de pedido por política.
     :param hold_per_pol: Lista de costos de mantenimiento por política.
     :param short_per_pol: Lista de costos de escasez por política.
-    :param smallsArray: Lista de valores 'small' para cada política.
-    :param bigsArray: Lista de valores 'big' para cada política.
+    :param min_inventories: Lista de valores 'small' para cada política.
+    :param max_inventories: Lista de valores 'big' para cada política.
     """
   
     # Crear etiquetas de políticas
-    policies = [f"Policy: {small}-{big}" for small, big in zip(smallsArray, bigsArray)]
+    policies = [f"Policy: {small}-{big}" for small, big in zip(min_inventories, max_inventories)]
 
     # Configuración de la gráfica de barras
     x = np.arange(len(policies))
@@ -308,7 +307,7 @@ def time_cost_graphs(months, total_costs, ordering_costs, holding_costs, shortag
 
 
 def main():
-    global k, prob_distrib_demand, num_events, num_policies, smalls, bigs, num_months, num_values_demand, mean_interdemand, setup_cost, incremental_cost, holding_cost, shortage_cost, minlag, maxlag, smallsArray, bigsArray
+    global k, prob_distrib_demand, num_events, num_policies, min_inventory, max_inventory, num_months, num_values_demand, mean_interdemand, setup_cost, incremental_cost, holding_cost, shortage_cost, minlag, maxlag, min_inventories, max_inventories
     global total_costs, ordering_costs, holding_costs, shortage_costs
     # Ingreso de los parámetros de entrada
     # initial_inv_level = float(input("Ingrese el valor de initial_inv_level: "))
@@ -328,23 +327,28 @@ def main():
 
     print(num_months)
 
-    # Parámetros de "smalls" y "bigs" del libro
+    # Parámetros de "min_inventory" y "max_inventory" del libro
     num_events = 4
     k = 0
-    smallsArray = [20, 20, 20, 20, 40, 40, 40, 60, 60]
-    bigsArray = [40, 60, 80, 100, 60, 80, 100, 80, 100]
+    min_inventories = [20, 20, 20, 20, 40, 40, 40, 60, 60]
+    max_inventories = [40, 60, 80, 100, 60, 80, 100, 80, 100]
 
 
 
     prob_distrib_demand = [0.0] * (int(num_values_demand) + 1)
-    for i in range(1, int(num_values_demand) + 1):
-        prob_distrib_demand[i] = float(input("Ingrese el valor de prob_distrib_demand en {}: ".format(i))) # Se ingresan las probabilidades de que la demanda sea de i unidades
+    # for i in range(1, int(num_values_demand) + 1):
+    #     prob_distrib_demand[i] = float(input("Ingrese el valor de prob_distrib_demand en {}: ".format(i))) # Se ingresan las probabilidades de que la demanda sea de i unidades
+    prob_distrib_demand[1] = 0.16666666666666666
+    prob_distrib_demand[2] = 0.3333333333333333
+    prob_distrib_demand[3] = 0.3333333333333333
+    prob_distrib_demand[4] = 0.16666666666666666
     # Corre la simulación variando la política de inventario
+
     for i in range(1, int(num_policies) + 1):
 
         # Lee la política de inventario e inicializa la simulación
-        smalls = smallsArray[k]
-        bigs = bigsArray[k]
+        min_inventory = min_inventories[k]
+        max_inventory = max_inventories[k]
         initailize()
 
         while(next_event_type != 3):
@@ -365,8 +369,8 @@ def main():
     print("Ordering cost:", round(final_ordering, 2))
     print("Holding cost:", round(final_holding, 2))
     print("Shortage cost:", round(final_shortage, 2))
-    cost_graphs(final_tot, final_ordering, final_holding, final_shortage, smallsArray, bigsArray)
-    cost_pie_chart(final_ordering, final_holding, final_shortage, smallsArray, bigsArray)
-    cost_per_policy_graphs(tot_per_pol, ord_per_pol, hold_per_pol, short_per_pol, smallsArray, bigsArray)  
+    cost_graphs(final_tot, final_ordering, final_holding, final_shortage, min_inventories, max_inventories)
+    cost_pie_chart(final_ordering, final_holding, final_shortage, min_inventories, max_inventories)
+    cost_per_policy_graphs(tot_per_pol, ord_per_pol, hold_per_pol, short_per_pol, min_inventories, max_inventories)  
     time_cost_graphs(num_months,tot_per_pol, ord_per_pol, hold_per_pol, short_per_pol)    
 main()
