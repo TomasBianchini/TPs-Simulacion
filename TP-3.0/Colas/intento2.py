@@ -26,9 +26,9 @@ server_status = IDLE
 area_num_in_q = 0.0
 area_server_status = 0.0
 mean_interarrival = 1.0
-mean_service = 0.5
+mean_service = 0.9
 sim_time = 0.0 #Clock - Simulation Time
-#time_arrival = [0.0] * (Q_LIMIT + 1)
+total_time_custm_in_q = [0.0] * (Q_LIMIT + 1) #en la pos n se acumulan las veces que hubo n clientes en cola
 
 total_of_delays = 0.0
 
@@ -41,7 +41,7 @@ total_of_delays = 0.0
 # tiempo promedio en sistema = 
 # tiempo promedio en cola = 
 # utilizacion del servidor
-# probabilidad de encontrar n clientes en cola = 
+# probabilidad de encontrar n clientes en cola = T(n) es la sumatoria de todos los periodos en los que hubo n clientes / tiempo total de la simulacion 
 # probabilidad de denegacion de servicio = 
 ####
 
@@ -55,14 +55,17 @@ time_last_event = 0
 time_arrival = []
 while num_custs_delayed < num_delays_requiered:
     print(f'Servidos: {num_custs_delayed} - En Cola: {num_in_q}')
+    print(f'Delay: {total_of_delays}')
     #evaluamos tipo de evento
     sim_time, next_event_type = next_event(event_list)
     print (f'Proximo Evento: {next_event_type} - Simulación Tiempo: {sim_time}')
     #calculamos estadisticas
     time_since_last_event = sim_time - time_last_event
     time_last_event = sim_time
-    area_num_in_q = num_in_q * time_since_last_event
-    area_server_status = server_status * time_since_last_event
+    area_num_in_q = area_num_in_q + (num_in_q * time_since_last_event)
+    #print(f'Area bajo Q(t): {area_num_in_q} - Tiempo desde el ultimo evento: {time_since_last_event}')
+    total_time_custm_in_q[num_in_q] = total_time_custm_in_q[num_in_q] + time_since_last_event 
+    area_server_status = area_server_status + (server_status * time_since_last_event)
 
     if next_event_type==0:
         #arrival
@@ -88,17 +91,20 @@ while num_custs_delayed < num_delays_requiered:
         else:
             num_in_q = num_in_q - 1
             delay = sim_time - time_arrival[0]
+            total_of_delays = total_of_delays + delay
             num_custs_delayed = num_custs_delayed + 1 #aumento uno la cant clientes servidos porque este entrará con el servidor ocupado
             event_list[1] = sim_time + exponencial(mean_service)
             time_arrival = time_arrival[1:] #elimino de la cola el que tomo servicio    
 
-avg_delay_queue = total_of_delays/num_custs_delayed
-avg_custm_queue = area_num_in_q/sim_time
-server_utilization = area_server_status/sim_time
-print(f'Promedio de espera en cola: {avg_delay_queue}')
-print(f'Promedio de clientes en cola: {avg_custm_queue}')
-print(f'Utilizacion del servidor: {server_utilization}%')
+avg_delay_queue = (total_of_delays/num_custs_delayed)*100
+avg_custm_queue = (area_num_in_q/sim_time)*100
+server_utilization = (area_server_status/sim_time)*100
 
+total_time_custm_in_q = [round((cli/sim_time)*100,3) for cli in total_time_custm_in_q]
+print(f'Promedio de espera en cola: {round(avg_delay_queue,3)} seg')
+print(f'Promedio de clientes en cola: {round(avg_custm_queue,3)} clientes')
+print(f'Utilizacion del servidor: {round(server_utilization,3)}%')
+print(f'Probabilidad de encontrar N clientes en cola: {total_time_custm_in_q}')
 
 
 
