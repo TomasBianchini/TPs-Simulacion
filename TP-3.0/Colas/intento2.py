@@ -12,6 +12,58 @@ def next_event(event_list: list):
     else:
         return event_list[1], 1 #departure
 
+def fig_prob_n_clientes_en_cola(total_time_custm_in_q):
+    customers = []
+    for i in range(len(total_time_custm_in_q)):
+        customers.append(i)
+    count=0
+    index = 0
+    for cli in total_time_custm_in_q:
+        if cli == 0:
+            count = count + 1
+        if count ==10:
+            break
+        index = index + 1
+    total_time_custm_in_q = total_time_custm_in_q[:index]
+    customers= customers[:index]
+    plt.bar(customers, total_time_custm_in_q)
+    plt.title('Probabilidad de encontrar n clientes en cola')
+    plt.xlabel('n')
+    plt.ylabel('Probabilidad')
+    plt.show()
+
+
+def grafico_funcionporpartes_valoresdiscretos(intervalos):
+
+    # Crear las listas de puntos x e y
+    x_points = []
+    y_points = []
+
+    valores=[]
+
+    # Agregar los puntos de los intervalos a las listas
+    for start, end, q in intervalos:
+        x_points.extend([start, end])
+        y_points.extend([q,q])
+        valores.append(q)
+
+    # Crear la figura y el eje
+    fig, ax = plt.subplots()
+
+    # Dibujar la línea continua
+    ax.plot(x_points, y_points, label='Cantidad de clientes en cola')
+
+    # Configurar los ticks del eje y para mostrar solo valores discretos
+    ax.set_yticks(valores)
+
+    # Añadir etiquetas y título
+    ax.set_xlabel('t')
+    ax.set_ylabel('Q(t)')
+    ax.set_title('Q(t)')
+    ax.legend()
+
+    # Mostrar la gráfica
+    plt.show()
 
 Q_LIMIT = 100
 BUSY = 1
@@ -53,6 +105,7 @@ event_list = [first_costumer, pow(2,30)] #Obligamos al primer evento a ser una l
 # event_list[0]: ARRIVE --- # event_list[1]: DEPART
 time_last_event = 0
 time_arrival = []
+intervalos = []
 while num_custs_delayed < num_delays_requiered:
     print(f'Servidos: {num_custs_delayed} - En Cola: {num_in_q}')
     print(f'Delay: {total_of_delays}')
@@ -60,6 +113,8 @@ while num_custs_delayed < num_delays_requiered:
     sim_time, next_event_type = next_event(event_list)
     print (f'Proximo Evento: {next_event_type} - Simulación Tiempo: {sim_time}')
     #calculamos estadisticas
+    intervalos.append((time_last_event,sim_time,num_in_q))
+    print(f'Tuplas para grafico (LastEvent-SimTime-NumInQ): {(time_last_event,sim_time,num_in_q)} ')
     time_since_last_event = sim_time - time_last_event
     time_last_event = sim_time
     area_num_in_q = area_num_in_q + (num_in_q * time_since_last_event)
@@ -107,6 +162,8 @@ print(f'Utilizacion del servidor: {round(server_utilization,3)}%')
 print(f'Probabilidad de encontrar N clientes en cola: {total_time_custm_in_q}')
 
 
+fig_prob_n_clientes_en_cola(total_time_custm_in_q)
+grafico_funcionporpartes_valoresdiscretos(intervalos)
 
 
 

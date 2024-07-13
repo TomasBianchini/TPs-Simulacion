@@ -58,7 +58,7 @@ def funcionporpartes_sinconfigurareje():
 
 
 ############# GRAFICO 2 CON VALORES DISCRETOS #################### 
-def grafico_funcionporpartes_valoresdiscretos():
+def grafico_funcionporpartes_valoresdiscretos(intervalos, valores):
 
     # Definir los puntos de los intervalos y los valores de la función en esos intervalos
     intervalos = [(0, 2.6), (2.6, 3.8), (3.8, 4)]
