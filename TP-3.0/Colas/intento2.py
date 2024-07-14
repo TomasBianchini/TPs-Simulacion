@@ -65,13 +65,46 @@ def grafico_funcionporpartes_valoresdiscretos(intervalos):
     # Mostrar la gráfica
     plt.show()
 
+
+def grafico_server_status(utilizaciones):
+
+    # Crear las listas de puntos x e y
+    x_points = []
+    y_points = []
+
+    valores=[0,1]
+
+    # Agregar los puntos de los intervalos a las listas
+    for start, end, server_status in utilizaciones:
+        x_points.extend([start, end])
+        y_points.extend([server_status,server_status])
+
+    # Crear la figura y el eje
+    fig, ax = plt.subplots()
+
+    # Dibujar la línea continua
+    ax.step(x_points, y_points, where='post', label='f(x)', color='b', linewidth=1)
+
+
+    # Configurar los ticks del eje y para mostrar solo valores discretos
+    ax.set_yticks(valores)
+
+    # Añadir etiquetas y título
+    ax.set_xlabel('t')
+    ax.set_ylabel('Q(t)')
+    ax.set_title('Estatus del servidor a lo largo del tiempo')
+    ax.legend()
+
+    # Mostrar la gráfica
+    plt.show()
+
 Q_LIMIT = 100
 BUSY = 1
 IDLE = 0
 
 next_event_type = 0
 num_custs_delayed = 0
-num_delays_requiered = 1000
+num_delays_requiered = 10
 num_in_q = 0   #Q(t) -no cuenta el cliente en servicio-
 server_status = IDLE
 
@@ -106,6 +139,7 @@ event_list = [first_costumer, pow(2,30)] #Obligamos al primer evento a ser una l
 time_last_event = 0
 time_arrival = []
 intervalos = []
+utilizaciones = []
 while num_custs_delayed < num_delays_requiered:
     print(f'Servidos: {num_custs_delayed} - En Cola: {num_in_q}')
     print(f'Delay: {total_of_delays}')
@@ -120,6 +154,7 @@ while num_custs_delayed < num_delays_requiered:
     area_num_in_q = area_num_in_q + (num_in_q * time_since_last_event)
     #print(f'Area bajo Q(t): {area_num_in_q} - Tiempo desde el ultimo evento: {time_since_last_event}')
     total_time_custm_in_q[num_in_q] = total_time_custm_in_q[num_in_q] + time_since_last_event 
+    utilizaciones.append((time_last_event,sim_time,server_status))
     area_server_status = area_server_status + (server_status * time_since_last_event)
 
     if next_event_type==0:
@@ -164,7 +199,7 @@ print(f'Probabilidad de encontrar N clientes en cola: {total_time_custm_in_q}')
 
 fig_prob_n_clientes_en_cola(total_time_custm_in_q)
 grafico_funcionporpartes_valoresdiscretos(intervalos)
-
+grafico_server_status(utilizaciones)
 
 
 
