@@ -1,120 +1,186 @@
 import random
 import math
-from utilities import *
+import matplotlib.pyplot as plt
 
+def exponencial(beta):
+    U = random.random()
+    return round((-beta * math.log(U)),2)
 
-
-BUSY = 1 #Ocupado
-IDLE = 0  #Inactivo
-Q_LIMIT = 100 #Limite de la cola
-n = 5 #Cantidad de demoras completadas (condición de fin)
-
-#VARIABLES
-
-media_interarribo = 1.0
-media_servicio = 0.5
-
-
-
-#vent_list=[]       #0->Arrival 1->Delayed
-#Statistical Counters
-
-i_arrival=0 
-i_service=0
-
-times_interarrival=[]
-times_services=[]
-
-
-
-
-def arrival(server_status,number_in_queue,number_delayed):
-    if server_status == BUSY:
-        number_in_queue+=1
-        if is_queue_full(Q_LIMIT, number_in_queue):
-            print('Pase el value error') 
+def next_event(event_list: list):
+    if event_list[0]< event_list[1]:
+        return event_list[0], 0 #arrive 
     else:
-        server_status = BUSY
-        number_delayed +=1
-    return server_status, number_in_queue, number_delayed 
+        return event_list[1], 1 #departure
+
+def fig_prob_n_clientes_en_cola(total_time_custm_in_q):
+    customers = []
+    for i in range(len(total_time_custm_in_q)):
+        customers.append(i)
+    count=0
+    index = 0
+    for cli in total_time_custm_in_q:
+        if cli == 0:
+            count = count + 1
+        if count ==10:
+            break
+        index = index + 1
+    total_time_custm_in_q = total_time_custm_in_q[:index]
+    customers= customers[:index]
+    plt.bar(customers, total_time_custm_in_q)
+    plt.title('Probabilidad de encontrar n clientes en cola')
+    plt.xlabel('Cant. Clientes')
+    plt.ylabel('P(n)')
+    plt.show()
+
+def grafico_probabilidad_denegacion_servicio(lista):
+    n = ['0', '2', '5', '10', '50']
+    plt.bar(n, lista)
+    plt.title('Probabilidad de Denegación de Servicio')
+    plt.ylim(0,120)
+    plt.xlabel('Longitud Max. de la Cola')
+    plt.ylabel('Probabilidad')
+    plt.show()
+
+def grafico_funcionporpartes_valoresdiscretos(intervalos):
+    x_points = []
+    y_points = []
+    valores=[]
+    for start, end, q in intervalos:
+        x_points.extend([start, end])
+        y_points.extend([q,q])
+        valores.append(q)
+    fig, ax = plt.subplots()
+    ax.plot(x_points, y_points, label='Cantidad de clientes en cola')
+    ax.set_yticks(valores)
+    ax.set_xlabel('Tiempo')
+    ax.set_ylabel('Cantidad de Clientes')
+    ax.set_title('Q(t)')
+    ax.legend()
+    plt.show()
+
+
+def grafico_server_status(utilizaciones):
+    x_points = []
+    y_points = []
+    valores=[0,1]
+    for start, end, server_status in utilizaciones:
+        x_points.extend([start, end])
+        y_points.extend([server_status,server_status])
+    fig, ax = plt.subplots()
+    ax.step(x_points, y_points, where='post', label='f(x)', color='b', linewidth=1)
+    ax.set_yticks(valores)
+    ax.set_xlabel('Tiempo')
+    ax.set_ylabel('Q(t)')
+    ax.set_title('Estatus del servidor a lo largo del tiempo')
+    ax.legend()
+    plt.show()
 
 
 
-def delayed(number_in_queue, server_status,event_list):
-    if number_in_queue == 0:
-        server_status = IDLE
-        event_list[1] = 1000000000000
-    else:
-        number_in_queue -= 1
-        server_status=BUSY
-    return server_status, event_list, number_in_queue
-
-
-
-def next_event(event_list, times_interarrival, times_services, i_arrival, i_service):
-    if event_list[0] <= event_list[1]:
-        next = 'A'
-        clock = event_list[0]
-        event_list[0] += times_interarrival[i_arrival]
-        i_arrival += 1 
-    else:
-        next ='D'
-        clock = event_list[1]
-        event_list[1] += times_services[i_service]
-        i_service += 1
-    return   i_arrival, i_service, clock, next
-
-####### MAIN ################
-
-
-#times_interarrival, times_services = time_generator(media_interarribo, media_servicio)
-times_interarrival = [0.4, 1.2, 0.5, 1.7, 0.2, 1.6, 0.2, 1.4]
-times_services = [2.0, 0.7, 0.2, 1.1, 3.7 ]
-
-event_list = [times_interarrival[i_arrival], 1000000000000]
-i_arrival += 1 
-clock = 0
+Q_LIMIT = 100
+BUSY = 1
+IDLE = 0
+next_event_type = 0
+num_custs_delayed = 0
+num_delays_requiered = 1000
+num_in_q = 0   #Q(t) -no cuenta el cliente en servicio-
 server_status = IDLE
-number_in_queue = 0
-time_of_arrival=[]
-time_of_last_event=0
-number_delayed = 0
-total_delay=0
-area_under_q=0
-area_under_d=0
-i=0
-print(f'Corrida {i} - Event List: {event_list}')
-while number_delayed < n:
-    i+=1
-    i_arrival, i_service, clock, next = next_event(event_list, times_interarrival, times_services, i_arrival, i_service)
-    print(f'Corrida {i} - Event List: {event_list}')
-    if next == 'A':
-        server_status, number_in_queue, number_delayed = arrival(server_status,number_in_queue,number_delayed)
+area_num_in_q = 0.0
+area_server_status = 0.0
+mean_interarrival = 1.0
+mean_service = 0.5
+sim_time = 0.0 #Clock - Simulation Time
+total_time_custm_in_q = [0.0] * (Q_LIMIT + 1) #en la pos n se acumulan las veces que hubo n clientes en cola
+total_of_delays = 0.0
+total_of_arrivals = 0 #creo que es inutil esto
+#Main
+first_costumer = exponencial(mean_interarrival)
+event_list = [first_costumer, pow(2,30)] 
+time_last_event = 0
+time_arrival = []
+intervalos = []
+utilizaciones = []
+while num_custs_delayed < num_delays_requiered:
+    #evaluamos tipo de evento
+    sim_time, next_event_type = next_event(event_list)
+    #calculamos estadisticas
+    intervalos.append((time_last_event,sim_time,num_in_q))
+    time_since_last_event = sim_time - time_last_event
+    time_last_event = sim_time
+    area_num_in_q = area_num_in_q + (num_in_q * time_since_last_event)
+    total_time_custm_in_q[num_in_q] = total_time_custm_in_q[num_in_q] + time_since_last_event 
+    utilizaciones.append((time_last_event,sim_time,server_status))
+    area_server_status = area_server_status + (server_status * time_since_last_event)
+
+    if next_event_type==0:
+        #arrival
+        #programo el proximo evento de arribo
+        total_of_arrivals = total_of_arrivals + 1
+        event_list[0]=sim_time+exponencial(mean_interarrival)
+        if server_status == BUSY:
+            num_in_q = num_in_q + 1
+            if num_in_q > Q_LIMIT:
+                raise ValueError(f'LA COLA SE HA LLENADO - Tiempo: {sim_time} - Clientes servidos: {num_custs_delayed}')
+            time_arrival.append(sim_time) #agrego a la cola esta llegada
+        else:
+            delay = 0
+            total_of_delays = total_of_delays + delay
+            num_custs_delayed = num_custs_delayed + 1
+            server_status = BUSY
+            event_list[1]=sim_time+exponencial(mean_service)
+
     else: 
-        server_status, event_list, number_in_queue = delayed(number_in_queue,server_status)
+        #departur
+        if num_in_q == 0:
+            server_status = IDLE
+            event_list[1]=pow(2,30)
+        else:
+            num_in_q = num_in_q - 1
+            delay = sim_time - time_arrival[0]
+            total_of_delays = total_of_delays + delay
+            num_custs_delayed = num_custs_delayed + 1 #aumento uno la cant clientes servidos porque este entrará con el servidor ocupado
+            event_list[1] = sim_time + exponencial(mean_service)
+            time_arrival = time_arrival[1:] #elimino de la cola el que tomo servicio    
+
+quantity_delayed_for_time_unit = total_of_delays/sim_time #mu
+quantity_arrived_for_time_unit = total_of_arrivals/sim_time #landa
+avg_delay_queue = (total_of_delays/num_custs_delayed)*100 #tiempo promedio en cola
+avg_custm_queue = (area_num_in_q/sim_time)*100 #q(n)
+server_utilization = (area_server_status/sim_time)*100
+avg_time_in_system = avg_delay_queue + 1/quantity_delayed_for_time_unit
+avg_custm_in_system = quantity_arrived_for_time_unit * avg_time_in_system
+
+total_time_custm_in_q = [round((cli/sim_time)*100,3) for cli in total_time_custm_in_q] #p_index
+
+def probabilidad_denegacion_servicio(quantity_arrived_for_time_unit, quantity_delayed_for_time_unit ):
+#Para colas de tamaño [0, 2, 5, 10, 50]
+    rho = quantity_arrived_for_time_unit/quantity_delayed_for_time_unit
+    p0=1 - (rho)
+    n = [0, 2, 5, 10, 50]
+    service_denegation_probability = []
+    for j in n:
+        sumatoria= 0
+        for i in range(j):
+            sumatoria = sumatoria + pow(rho,i)*p0
+        service_denegation_probability.append(1-sumatoria)
+    return service_denegation_probability
+    """#Manera 2 probada
+    arreglo = []
+    for i in range(11): #[de 0 a 10]
+        arreglo.append(p0*pow(rho,i))
+    prob_denega_servicio_10_max_clientes = 1-sum(arreglo)
+    print(f'Probabilidad de denegacion de servicio para cola de 10 clientes: {prob_denega_servicio_10_max_clientes}%')
+    """
+    
+print(f'Promedio de espera en cola: {round(avg_delay_queue,3)} seg')
+print(f'Promedio de clientes en cola q(n): {round(avg_custm_queue,3)} clientes')
+print(f'Utilizacion del servidor: {round(server_utilization,3)}%')
+print(f'Tiempo promedio en el sistema: {round(avg_time_in_system,3)} seg')
+print(f'Promedio de clientes en el sistema: {round(avg_custm_in_system,3)} clientes')
 
 
-
-
-
-
-
-
-
-""" tiempo_entre_llegadas = exponencial(media_interarribo)
-print(f"Tiempo entre llegadas: {tiempo_entre_llegadas}")
-
-tiempo_servicio = exponencial(media_servicio)
-print(f"Tiempo de servicio: {tiempo_servicio}") """
-
-"""
-    t=0 --> 
-        iniciar las variables. ejecutar un tiempo entre llegadas. 
-        Programar el evento de llegada. Chequeo el estatus del servidor
-            OCUPADO: (No, estara siempre desocupado)
-            LIBRE: Demora para el cliente uno = 0. Ejecutar tiempo de servicio.
-                    Modifico el estado a ocupado. Sumo 1 a la cantidad de demoras. Programo el evento
-                    de salida. Recopilo los datos necesarios. 
-"""
-
- 
+fig_prob_n_clientes_en_cola(total_time_custm_in_q)
+#grafico_funcionporpartes_valoresdiscretos(intervalos)
+#grafico_server_status(utilizaciones)
+service_denegation_probability = probabilidad_denegacion_servicio(quantity_arrived_for_time_unit, quantity_delayed_for_time_unit )
+grafico_probabilidad_denegacion_servicio(service_denegation_probability)

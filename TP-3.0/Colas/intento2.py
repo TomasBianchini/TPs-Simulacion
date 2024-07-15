@@ -28,8 +28,8 @@ def fig_prob_n_clientes_en_cola(total_time_custm_in_q):
     customers= customers[:index]
     plt.bar(customers, total_time_custm_in_q)
     plt.title('Probabilidad de encontrar n clientes en cola')
-    plt.xlabel('n')
-    plt.ylabel('Probabilidad')
+    plt.xlabel('Cant. Clientes')
+    plt.ylabel('P(n)')
     plt.show()
 
 
@@ -186,13 +186,13 @@ while num_custs_delayed < num_delays_requiered:
             event_list[1] = sim_time + exponencial(mean_service)
             time_arrival = time_arrival[1:] #elimino de la cola el que tomo servicio    
 
-avg_delay_queue = (total_of_delays/num_custs_delayed)*100
-avg_custm_queue = (area_num_in_q/sim_time)*100
+avg_delay_queue = (total_of_delays/num_custs_delayed)*100 #tiempo promedio en cola
+avg_custm_queue = (area_num_in_q/sim_time)*100 #q(n)
 server_utilization = (area_server_status/sim_time)*100
 
 total_time_custm_in_q = [round((cli/sim_time)*100,3) for cli in total_time_custm_in_q]
-print(f'Promedio de espera en cola: {round(avg_delay_queue,3)} seg')
-print(f'Promedio de clientes en cola: {round(avg_custm_queue,3)} clientes')
+print(f'Promedio de espera en cola - Demora Promedio en cola: {round(avg_delay_queue,3)} seg')
+print(f'Promedio de clientes en cola q(n): {round(avg_custm_queue,3)} clientes')
 print(f'Utilizacion del servidor: {round(server_utilization,3)}%')
 print(f'Probabilidad de encontrar N clientes en cola: {total_time_custm_in_q}')
 
