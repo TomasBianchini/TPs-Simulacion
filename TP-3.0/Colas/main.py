@@ -26,6 +26,8 @@ def fig_prob_n_clientes_en_cola(total_time_custm_in_q):
         index = index + 1
     total_time_custm_in_q = total_time_custm_in_q[:index]
     customers= customers[:index]
+    ######################
+    
     plt.bar(customers, total_time_custm_in_q)
     plt.title('Probabilidad de encontrar n clientes en cola')
     plt.xlabel('Cant. Clientes')
@@ -33,10 +35,10 @@ def fig_prob_n_clientes_en_cola(total_time_custm_in_q):
     plt.show()
 
 def grafico_probabilidad_denegacion_servicio(lista):
-    n = ['0', '2', '5', '10', '50']
+    n = ['0', '2', '5', '10', '50', '70', '90', '100']
     plt.bar(n, lista)
     plt.title('Probabilidad de Denegación de Servicio')
-    plt.ylim(0,120)
+    plt.ylim(0,1.2)
     plt.xlabel('Longitud Max. de la Cola')
     plt.ylabel('Probabilidad')
     plt.show()
@@ -87,8 +89,10 @@ num_in_q = 0   #Q(t) -no cuenta el cliente en servicio-
 server_status = IDLE
 area_num_in_q = 0.0
 area_server_status = 0.0
-mean_interarrival = 1.0
-mean_service = 0.5
+global mean_interarrival
+global mean_service
+mean_interarrival = 1.000 #lambda - (min)
+mean_service = 0.500 #mu - (min)
 sim_time = 0.0 #Clock - Simulation Time
 total_time_custm_in_q = [0.0] * (Q_LIMIT + 1) #en la pos n se acumulan las veces que hubo n clientes en cola
 total_of_delays = 0.0
@@ -100,6 +104,7 @@ time_last_event = 0
 time_arrival = []
 intervalos = []
 utilizaciones = []
+#while sim_time<=10000:
 while num_custs_delayed < num_delays_requiered:
     #evaluamos tipo de evento
     sim_time, next_event_type = next_event(event_list)
@@ -144,43 +149,49 @@ while num_custs_delayed < num_delays_requiered:
 
 quantity_delayed_for_time_unit = total_of_delays/sim_time #mu
 quantity_arrived_for_time_unit = total_of_arrivals/sim_time #landa
-avg_delay_queue = (total_of_delays/num_custs_delayed)*100 #tiempo promedio en cola
-avg_custm_queue = (area_num_in_q/sim_time)*100 #q(n)
+avg_delay_queue = (total_of_delays/num_custs_delayed) #tiempo promedio en cola
+avg_custm_queue = (area_num_in_q/sim_time) #q(n)
 server_utilization = (area_server_status/sim_time)*100
-avg_time_in_system = avg_delay_queue + 1/quantity_delayed_for_time_unit
-avg_custm_in_system = quantity_arrived_for_time_unit * avg_time_in_system
+avg_time_in_system = avg_delay_queue + 1/quantity_delayed_for_time_unit #ACA HAY UN ERROR
+avg_service_time = 1 / (server_utilization/100)
+#avg_time_in_system = avg_service_time + avg_delay_queue
+#avg_custm_in_system = quantity_arrived_for_time_unit * avg_time_in_system
+avg_custm_in_system = avg_custm_queue + server_utilization/100
 
 total_time_custm_in_q = [round((cli/sim_time)*100,3) for cli in total_time_custm_in_q] #p_index
 
 def probabilidad_denegacion_servicio(quantity_arrived_for_time_unit, quantity_delayed_for_time_unit ):
 #Para colas de tamaño [0, 2, 5, 10, 50]
     rho = quantity_arrived_for_time_unit/quantity_delayed_for_time_unit
-    p0=1 - (rho)
-    n = [0, 2, 5, 10, 50]
+    n = [0, 2, 5, 10, 50,70, 90, 100]
     service_denegation_probability = []
-    for j in n:
-        sumatoria= 0
-        for i in range(j):
-            sumatoria = sumatoria + pow(rho,i)*p0
-        service_denegation_probability.append(1-sumatoria)
+    for K in n:
+        if rho == 1:
+            p0 = 1 / (K + 1)
+        else:
+            p0 = (1 - rho) / (1 - pow(rho,(K + 1)))
+        service_denegation_probability.append(p0 * pow(rho,K))
+        print(f'K={K} - p0={p0} - rho={rho} - Prob: {p0 * (rho**K)} ')
     return service_denegation_probability
-    """#Manera 2 probada
-    arreglo = []
-    for i in range(11): #[de 0 a 10]
-        arreglo.append(p0*pow(rho,i))
-    prob_denega_servicio_10_max_clientes = 1-sum(arreglo)
-    print(f'Probabilidad de denegacion de servicio para cola de 10 clientes: {prob_denega_servicio_10_max_clientes}%')
-    """
-    
-print(f'Promedio de espera en cola: {round(avg_delay_queue,3)} seg')
-print(f'Promedio de clientes en cola q(n): {round(avg_custm_queue,3)} clientes')
-print(f'Utilizacion del servidor: {round(server_utilization,3)}%')
-print(f'Tiempo promedio en el sistema: {round(avg_time_in_system,3)} seg')
-print(f'Promedio de clientes en el sistema: {round(avg_custm_in_system,3)} clientes')
+
+
+print('-----------------------------------------------------------')
+print(f'Mean Interarrival time:                 {mean_interarrival} min.')
+print(f'Mean Service Time:                      {mean_service} min.')
+print(f'Number of customers:                    {num_delays_requiered}')  
+print()
+print(f'Promedio de clientes en el sistema:     {round(avg_custm_in_system,3)} clientes')
+print(f'Promedio de clientes en cola q(n):      {round(avg_custm_queue,3)} clientes')
+print(f'Tiempo promedio en el sistema:          {round(avg_time_in_system,3)} min.')
+print(f'Promedio de espera en cola:             {round(avg_delay_queue,3)} min.')
+print(f'Utilizacion del servidor:               {round(server_utilization,3)}%')
+print(f'Tiempo de Simulación:                   {round(sim_time,3)} min.')
+print()
+print()
 
 
 fig_prob_n_clientes_en_cola(total_time_custm_in_q)
 #grafico_funcionporpartes_valoresdiscretos(intervalos)
 #grafico_server_status(utilizaciones)
-service_denegation_probability = probabilidad_denegacion_servicio(quantity_arrived_for_time_unit, quantity_delayed_for_time_unit )
-grafico_probabilidad_denegacion_servicio(service_denegation_probability)
+#service_denegation_probability = probabilidad_denegacion_servicio(quantity_arrived_for_time_unit, quantity_delayed_for_time_unit )
+#grafico_probabilidad_denegacion_servicio(service_denegation_probability)
