@@ -109,7 +109,7 @@ def total_time_in_queue_of_clients(total_time_custm_in_q_array:list[list]):
 ###
 
 
-def multiple_runings_program(interarrival = 1, service= 0.5):
+def multiple_runings_program(interarrival = 1, service= 0.5, infty = False):
     global mean_interarrival
     global mean_service
 
@@ -129,9 +129,9 @@ def multiple_runings_program(interarrival = 1, service= 0.5):
 
     while run <= total_of_runnings:
         run += 1
-        QUEUE_INFTY = False
+        QUEUE_INFTY = infty
         if QUEUE_INFTY:
-            Q_LIMIT = 100000^99
+            Q_LIMIT = 2^32 #PARA HACER COLA INFINITA CON DETERMINADOS PARAMETROS ES NECESARIO AGRANDARLO
         else:
             Q_LIMIT = 100
         BUSY = 1
