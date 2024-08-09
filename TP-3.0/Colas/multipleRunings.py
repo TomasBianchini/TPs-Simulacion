@@ -108,15 +108,13 @@ def total_time_in_queue_of_clients(total_time_custm_in_q_array:list[list]):
 
 ###
 
-values = []
-global mean_interarrival
-global mean_service
-mean_service = 0.500 #mu - (min)
-mean_interarrival = mean_service*1.750  # 1.000 #lambda - (min)
-multipliers = [0.25, 0.50, 0.75, 1.0, 1.25, 1.50, 1.75, 2]
 
-for m in multipliers: 
-    mean_interarrival = mean_service*m  # 1.000 #lambda - (min)
+def multiple_runings_program(interarrival = 1, service= 0.5):
+    global mean_interarrival
+    global mean_service
+
+    mean_interarrival = interarrival #lambda - 1(min)
+    mean_service = service #mu - 0.5(min)
     quantity_delayed_for_time_unit_array = []
     quantity_arrived_for_time_unit_array = []
     avg_delay_queue_array = []
@@ -127,12 +125,15 @@ for m in multipliers:
     total_time_custm_in_q_array = []
     sim_time_array=[]
     run = 0
-    total_of_runnings = 50
+    total_of_runnings = 1000
 
     while run <= total_of_runnings:
         run += 1
         QUEUE_INFTY = False
-        Q_LIMIT = 100000^99
+        if QUEUE_INFTY:
+            Q_LIMIT = 100000^99
+        else:
+            Q_LIMIT = 100
         BUSY = 1
         IDLE = 0
         next_event_type = 0
@@ -279,57 +280,5 @@ for m in multipliers:
     print()
     print()
 
-    values.append((mean_interarrival, mean_service, sim_time, total_time_custm_in_q, avg_custm_in_system, avg_custm_queue,
-            avg_time_in_system, avg_delay_queue, server_utilization))
+    fig_prob_n_clientes_en_cola(total_time_custm_in_q)
 
-    #fig_prob_n_clientes_en_cola(total_time_custm_in_q)
-
-
-def graphics_of_diferents_parameters(values, multipliers):
-    avg_custm_queue = []
-    avg_delay_queue = []
-    sim_time = []
-    server_utilization = []
-    for v in values:
-        avg_custm_queue.append(v[5])
-        avg_delay_queue.append(v[7])
-        server_utilization.append(v[8])
-        sim_time.append(v[2])
-    
-    plt.figure(figsize=(14, 7))
-    plt.plot(multipliers, avg_custm_queue)
-    plt.xlabel('Variación del Parametro \'Tiempo de Interarribo\'')
-    plt.ylabel('Cant. Promedio Clientes en Cola')
-    plt.savefig('cant_promedio_clientes_en_cola')
-    plt.show()
-    
-
-    plt.figure(figsize=(14, 7))
-    plt.plot(multipliers, avg_delay_queue)
-    plt.xlabel('Variación del Parametro \'Tiempo de Interarribo\'')
-    plt.ylabel('Tiempo Promedio en Cola (min)')
-    plt.savefig('tiempo_promedio_en_cola')
-    plt.show()
-    
-
-    plt.figure(figsize=(14, 7))
-    plt.plot(multipliers, server_utilization)
-    plt.xlabel('Variación del Parametro \'Tiempo de Interarribo\'')
-    plt.ylabel('Utilización del Servidor (%)')
-    plt.savefig('utilizacion_de_servidor')
-    plt.show()
-   
-
-    plt.figure(figsize=(14, 7))
-    plt.plot(multipliers, sim_time)
-    plt.xlabel('Variación del Parametro \'Tiempo de Interarribo\'')
-    plt.ylabel('Tiempo de Simulación (min)')
-    plt.savefig('tiempo_simulacion')
-    plt.show()
-    
-    print('Promedio Clientes en Cola: ',avg_custm_queue)
-    print('Promedio Espera en Cola: ',avg_delay_queue)
-    print('Promedio Utilizacion del servidor: ',server_utilization)
-    print('Promedio tiempo de simulacion: ',sim_time)
-
-graphics_of_diferents_parameters(values, multipliers)
